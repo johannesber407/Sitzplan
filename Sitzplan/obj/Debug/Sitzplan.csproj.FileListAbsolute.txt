@@ -1,0 +1,15 @@
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\bin\Debug\Sitzplan.exe.config
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\bin\Debug\Sitzplan.exe
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\bin\Debug\Sitzplan.pdb
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Sitzplan.csprojAssemblyReference.cache
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\MainWindow.g.cs
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\App.g.cs
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Sitzplan_MarkupCompile.cache
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Sitzplan_MarkupCompile.lref
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\MainWindow.baml
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Sitzplan.g.resources
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Sitzplan.Properties.Resources.resources
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Sitzplan.csproj.GenerateResource.cache
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Sitzplan.csproj.CoreCompileInputs.cache
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Sitzplan.exe
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Sitzplan.pdb
