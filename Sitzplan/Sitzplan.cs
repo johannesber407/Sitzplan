@@ -53,7 +53,7 @@ namespace Sitzplan
             alleKombinationen = new List<List<List<Schueler>>>();
             
             BildeAlleKombinationen();
-            MessageBox.Show(safe);
+           // MessageBox.Show(safe);
         }
         private void BildeAllePäärchen()
         {
@@ -79,12 +79,19 @@ namespace Sitzplan
         private void BildeAlleKombinationen()
         {
             List<List<Schueler>> schuelers = new List<List<Schueler>>();
+            List<List<Schueler>> Kombination = new List<List<Schueler>>();
             for (int i = 0; i < (schueler.Count() / 2); i++)
             {
                 schuelers.Add(allePäärchen[0]); // lückenfüller
             }
-            
-            BildeAlleKombinationenRekursion(schuelers, allePäärchen, 0);
+            for(int i = 0; i < schuelers.Count()/2; i++)
+            {
+                for (int n = 0; n < allePäärchen.Count(); n++)
+                {
+                    Kombination.Add(allePäärchen[n]);
+                }
+            }
+            //BildeAlleKombinationenRekursion(schuelers, allePäärchen, 0);
         }
         private void BildeAlleKombinationenRekursion(List<List<Schueler>> i_alleKombinationen, List<List<Schueler>> i_allePäärchen, int i_currentPos)
         {
@@ -95,20 +102,21 @@ namespace Sitzplan
                 //ErgebnisTest.Add(i_alleKombinationen);
                 sichereDenScheiß(i_alleKombinationen);
                 i_alleKombinationen = new List<List<Schueler>>();
-                string combination = "";
+              //  string combination = "";
                 if(Score(i_alleKombinationen) > Bewertung)
                 {
                     Bewertung = Score(i_alleKombinationen);
                     ErgebnisKombination = i_alleKombinationen;
                 }
                 
-                combination += i_alleKombinationen[0][0].Name + " " + i_alleKombinationen[0][1].Name + "     " + i_alleKombinationen[1][0].Name + " " + i_alleKombinationen[1][1].Name;
+               // combination += i_alleKombinationen[0][0].Name + " " + i_alleKombinationen[0][1].Name + "     " + i_alleKombinationen[1][0].Name + " " + i_alleKombinationen[1][1].Name;
                 
-                safe += combination + "                       ";
+              //  safe += combination + "                       ";
                 return;
             }
             for (int j = 0; j < i_allePäärchen.Count(); j++)
             {
+               // List<List<List<Schueler>>> test = alleKombinationen;
                 i_alleKombinationen[i_currentPos] = i_allePäärchen[j];
                
                 this.BildeAlleKombinationenRekursion(i_alleKombinationen, i_allePäärchen, i_currentPos + 1);
