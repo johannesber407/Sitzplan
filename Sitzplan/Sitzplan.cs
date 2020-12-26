@@ -10,7 +10,7 @@ namespace Sitzplan
     public class TSitzplan
     {
         public List<TSitzplan.Schueler> schueler;
-        private int Bewertung = 0;
+        //private int Bewertung = 0;
         public struct Schueler {
             public Schueler(int Nummer, String Schueler, String W1, String W2, String W3, String W4, String W5)
             {
@@ -30,9 +30,12 @@ namespace Sitzplan
             public String Wunsch4 { get; set; }
             public String Wunsch5 { get; set; }
         }
-        public List<List<Schueler>> allePäärchen;
+        public List<List<List<Schueler>>> allePäärchen;
+        public List<Schueler> lückenfüller1 = new List<Schueler>();
+        public List<List<Schueler>> lückenfüller2 = new List<List<Schueler>>();
+        public List<List<List<Schueler>>> lückenfüller3 = new List<List<List<Schueler>>>();
         public List<List<List<Schueler>>> alleKombinationen;
-        public List<List<Schueler>> ErgebnisKombination = new List<List<Schueler>>();
+        public List<List<Schueler>> gewuenschtePaerchen = new List<List<Schueler>>();
         public string safe;
         
         public void BelegeKlassenlisteName(String Name)
@@ -42,58 +45,190 @@ namespace Sitzplan
         
         public void BerechneSitzplan(List<TSitzplan.Schueler> temp)
         {
-
+            lückenfüller1 = new List<Schueler>();
+            lückenfüller2 = new List<List<Schueler>>();
+            lückenfüller3 = new List<List<List<Schueler>>>();
+            lückenfüller1.Add(schueler[0]);
+            lückenfüller2.Add(lückenfüller1);
+            lückenfüller2.Add(lückenfüller1);
+            lückenfüller2.Add(lückenfüller1);
+            lückenfüller3.Add(lückenfüller2);
             if (temp.Count() % 2 != 0)
             {
                 temp.Add(new Schueler(0, null, null, null, null, null, null));
             }
             schueler = temp;
-            allePäärchen = new List<List<Schueler>>();
-            BildeAllePäärchen();
+            allePäärchen = new List<List<List<Schueler>>>();
+         //   BildeAllePäärchen();
             alleKombinationen = new List<List<List<Schueler>>>();
-            
-            BildeAlleKombinationen();
-           // MessageBox.Show(safe);
+            BildeGewuenschtePaerchen();
+            EntferneDopplungen();
+            SortierePaare();
+            //    BildeAlleKombinationen();
+            // MessageBox.Show(safe);
         }
-        private void BildeAllePäärchen()
+        private void BildeGewuenschtePaerchen()
         {
-            for (int i = 0; i < schueler.Count(); i++)
+            foreach(Schueler ASchueler in schueler)
             {
-                for (int j = 0; j < i; j++)
+                foreach(Schueler BSchueler in schueler)
                 {
-                    if (i == j)
-                    {
-                        j++;
-                    }
-                    if (i >= schueler.Count() || j >= schueler.Count())
+                    if(BSchueler.Name == null)
                     {
                         break;
                     }
-                    List<Schueler> Päärchen = new List<Schueler>();
-                    Päärchen.Add(schueler[i]);
-                    Päärchen.Add(schueler[j]);
-                    allePäärchen.Add(Päärchen);
+                    if(BSchueler.Name == ASchueler.Wunsch1)
+                    {
+                        List<Schueler> Päärchen = new List<Schueler>();
+                        Päärchen.Add(ASchueler);
+                        Päärchen.Add(BSchueler);
+                        gewuenschtePaerchen.Add(Päärchen);
+                    }
+                    if (BSchueler.Name == ASchueler.Wunsch2)
+                    {
+                        List<Schueler> Päärchen = new List<Schueler>();
+                        Päärchen.Add(ASchueler);
+                        Päärchen.Add(BSchueler);
+                        gewuenschtePaerchen.Add(Päärchen);
+                    }
+                    if (BSchueler.Name == ASchueler.Wunsch3)
+                    {
+                        List<Schueler> Päärchen = new List<Schueler>();
+                        Päärchen.Add(ASchueler);
+                        Päärchen.Add(BSchueler);
+                        gewuenschtePaerchen.Add(Päärchen);
+                    }
+                    if (BSchueler.Name == ASchueler.Wunsch4)
+                    {
+                        List<Schueler> Päärchen = new List<Schueler>();
+                        Päärchen.Add(ASchueler);
+                        Päärchen.Add(BSchueler);
+                        gewuenschtePaerchen.Add(Päärchen);
+                    }
+                    if (BSchueler.Name == ASchueler.Wunsch5)
+                    {
+                        List<Schueler> Päärchen = new List<Schueler>();
+                        Päärchen.Add(ASchueler);
+                        Päärchen.Add(BSchueler);
+                        gewuenschtePaerchen.Add(Päärchen);
+                    }
+                }
+            }
+            
+            
+        }
+        private void EntferneDopplungen()
+        {
+            foreach (List<Schueler> Paar in gewuenschtePaerchen) // doppelte rausnehmen
+            {
+                bool entfernt = false;
+                foreach (List<Schueler> schuelers in gewuenschtePaerchen)
+                {
+                    if ((Paar[0].Nr == schuelers[1].Nr) && (Paar[1].Nr == schuelers[0].Nr))
+                    {
+                        entfernt = true;
+                        gewuenschtePaerchen.RemoveAt(gewuenschtePaerchen.IndexOf(schuelers));
+                        EntferneDopplungen();
+                        break;
+                    }
+                }
+                if (entfernt)
+                {
+                    entfernt = false;
+                    break;
+                }
+            }
+        }
+        private void SortierePaare()
+        {
+            foreach(List<Schueler> Paar in gewuenschtePaerchen)
+            {
+                if (Paar[0].Nr > Paar[1].Nr)
+                {
+                    Schueler s1 = Paar[0];
+                    Paar[0] = Paar[1];
+                    Paar[1] = s1;
                 }
             }
         }
         private void BildeAlleKombinationen()
         {
-            List<List<Schueler>> schuelers = new List<List<Schueler>>();
-            List<List<Schueler>> Kombination = new List<List<Schueler>>();
-            for (int i = 0; i < (schueler.Count() / 2); i++)
+            int p = 0;
+            //List<List<Schueler>> schuelers = new List<List<Schueler>>();
+            List<List<List<Schueler>>> Kombination = new List<List<List<Schueler>>>();
+           /* for (int i = 0; i < (schueler.Count() / 2); i++)
             {
-                schuelers.Add(allePäärchen[0]); // lückenfüller
-            }
-            for(int i = 0; i < schuelers.Count()/2; i++)
+                schuelers.Add(allePäärchen[0][0]); // lückenfüller
+            }*/
+           
+            for(int i = 0; i < schueler.Count() - 1; i++)
             {
-                for (int n = 0; n < allePäärchen.Count(); n++)
+                
+
+                for (int k = 0; k < 3; k++)// herausfinden, wie viele "parallele" kombinationen es gibt!!
                 {
-                    Kombination.Add(allePäärchen[n]);
+                    alleKombinationen.Add(lückenfüller2);
+                    alleKombinationen[p] = new List<List<Schueler>>();
+                    int zeiger1, zeiger2;
+                    
+                    List<int> ausgeschieden = new List<int>();
+                    for (int l = 0; l < schueler.Count(); l++)
+                    {
+
+                        for (int n = 0; n <= l; n++)
+                        {
+                            zeiger1 = n; //zeiger 1 ist der kleinere.
+
+                            zeiger2 = l + k;
+                            if (ausgeschieden.Count == 0)
+                            {
+
+
+                                List<Schueler> Päärchen = new List<Schueler>();
+                                Päärchen.Add(schueler[0]);
+                                Päärchen.Add(schueler[i + 1]);
+                                ausgeschieden.Add(0);
+                                ausgeschieden.Add(i + 1);
+                                alleKombinationen[p].Add(Päärchen);
+
+                            }
+                            else
+                            {
+                                bool valid = true;
+                                for (int o = 0; o < ausgeschieden.Count; o++)
+                                {
+
+                                    if (zeiger1 == ausgeschieden[o] || zeiger2 == ausgeschieden[o] || zeiger2 <= zeiger1 || zeiger1 <= alleKombinationen.Count)
+                                    {
+                                        valid = false;
+                                    }
+                                }
+                                    if (valid)
+                                    {
+                                        List<Schueler> Päärchen = new List<Schueler>();
+                                        Päärchen.Add(schueler[zeiger1]);
+                                        Päärchen.Add(schueler[zeiger2]);
+                                        ausgeschieden.Add(zeiger1);
+                                        ausgeschieden.Add(zeiger2);
+                                        alleKombinationen[p].Add(Päärchen);
+                                    }
+                                    
+                                    
+                                
+
+                            }
+                            
+                            
+                        }
+
+                    }
+                    p++;
                 }
             }
             //BildeAlleKombinationenRekursion(schuelers, allePäärchen, 0);
+            //List<List<Schueler>> test = Kombination;
         }
-        private void BildeAlleKombinationenRekursion(List<List<Schueler>> i_alleKombinationen, List<List<Schueler>> i_allePäärchen, int i_currentPos)
+        /*private void BildeAlleKombinationenRekursion(List<List<Schueler>> i_alleKombinationen, List<List<Schueler>> i_allePäärchen, int i_currentPos)
         {
             //List<List<List<Schueler>>> ErgebnisTest = new List<List<List<Schueler>>>();
             if (i_currentPos == (schueler.Count() / 2))
@@ -127,7 +262,7 @@ namespace Sitzplan
             }
             
         }
-
+        */
         private int Score(List<List<Schueler>> Kombination)
         {
             int score = 0;

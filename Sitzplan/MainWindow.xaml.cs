@@ -516,5 +516,13 @@ namespace Sitzplan
 
             }
         }
+
+        private void SchuelerEingeben_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                NeuerSchueler_Click(sender, e);
+            }
+        }
     }
 }

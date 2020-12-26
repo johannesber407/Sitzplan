@@ -13,7 +13,7 @@
                     <StackPanel Orientation="Vertical" Margin="10">
                         <StackPanel Orientation="Horizontal">
                             <Label Margin="10">Schüler eintragen:</Label>
-                            <TextBox Name="SchuelerEingeben" Width="180" Margin="10" />
+                            <TextBox Name="SchuelerEingeben" Width="180" Margin="10"  KeyDown="SchuelerEingeben_KeyDown"/>
                             <Button Name="NeuerSchueler" Content="Eingeben" Margin="10" Click="NeuerSchueler_Click"/>
                         </StackPanel>
                         <DataGrid x:Name="DataGridKlassenliste" ItemsSource="{Binding Schueler}" AutoGenerateColumns="True" IsReadOnly="True" >
