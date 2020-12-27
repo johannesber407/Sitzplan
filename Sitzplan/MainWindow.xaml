@@ -7,7 +7,13 @@
         mc:Ignorable="d"
         Title="MainWindow" SizeToContent="WidthAndHeight">
     <Grid>
-        <StackPanel Orientation="Vertical">
+        <Menu>
+            <MenuItem Header="Datei">
+                <MenuItem Name="Speichern"  Header="Speichern" Click="Speichern_Click"/>
+                <MenuItem Name="Oeffnen" Header="Datei Öffnen" Click="Oeffnen_Click"/>
+            </MenuItem>
+        </Menu>
+        <StackPanel Orientation="Vertical" Margin="0,10,0,0">
             <StackPanel Orientation="Horizontal">
                 <GroupBox Header="Schüler" Margin="10">
                     <StackPanel Orientation="Vertical" Margin="10">

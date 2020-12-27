@@ -16,7 +16,9 @@ using System.Windows.Forms;
 using System.Collections;
 using System.Drawing;
 using Sitzplan;
-
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace Sitzplan
 {
@@ -32,7 +34,9 @@ namespace Sitzplan
         
         List<TSitzplan.Schueler> W = new List<TSitzplan.Schueler>();
         TSitzplan sitzplan = new TSitzplan();
-       // bool WuenscheWerdenNeuGeladen = false;
+        
+        
+        // bool WuenscheWerdenNeuGeladen = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -523,6 +527,96 @@ namespace Sitzplan
             {
                 NeuerSchueler_Click(sender, e);
             }
+        }
+
+        private void Speichern_Click(object sender, RoutedEventArgs e)
+        {
+
+           // Stream myStream;
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+
+            saveFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = 2;
+            saveFileDialog1.RestoreDirectory = true;
+            saveFileDialog1.ShowDialog();
+            
+            
+            FileStream writerFileStream = new FileStream(saveFileDialog1.FileName, FileMode.Create, FileAccess.Write);
+            
+            sitzplan.formatter.Serialize(writerFileStream, Schueler);
+            writerFileStream.Close();
+
+        }
+
+        private void Oeffnen_Click(object sender, RoutedEventArgs e)
+        {
+            if (Schueler.Count != 0)
+            {
+                OeffneDateiInNeuemFenster();
+                return;
+            }
+            List<TSitzplan.Schueler> schueler1 = new List<TSitzplan.Schueler>();
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.InitialDirectory = "c:\\";
+            openFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog1.FilterIndex = 2;
+            openFileDialog1.RestoreDirectory = true;
+            openFileDialog1.ShowDialog();
+            try
+            {
+               schueler1 = BinaryDeserialize(openFileDialog1.FileName) as List<TSitzplan.Schueler>;
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("Du machst da was falsch.");
+            }
+            foreach(TSitzplan.Schueler schueler in schueler1)
+            {
+                Schueler.Add(schueler);
+                SchuelerEingeben.Clear();
+                UpdateTabelle();
+                UpdateComboBoxesWuensche();
+            }
+            AnzahlEingetrageneSchueler = Schueler.Count();
+        }
+        private void OeffneDateiInNeuemFenster()
+        {
+            
+            List<TSitzplan.Schueler> schueler1 = new List<TSitzplan.Schueler>();
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.InitialDirectory = "c:\\";
+            openFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            openFileDialog1.FilterIndex = 2;
+            openFileDialog1.RestoreDirectory = true;
+            openFileDialog1.ShowDialog();
+            try
+            {
+                schueler1 = BinaryDeserialize(openFileDialog1.FileName) as List<TSitzplan.Schueler>;
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("Du machst da was falsch.");
+            }
+            MainWindow window = new MainWindow();
+            window.Show(); // Returns immediately
+            foreach (TSitzplan.Schueler schueler in schueler1)
+            {
+                window.Schueler.Add(schueler);
+                window.SchuelerEingeben.Clear();
+                window.UpdateTabelle();
+                window.UpdateComboBoxesWuensche();
+            }
+            window.AnzahlEingetrageneSchueler = window.Schueler.Count();
+        }
+        private object BinaryDeserialize(string filePath)
+        {
+            object obj;
+            FileStream readerFileStream;
+            BinaryFormatter bf = new BinaryFormatter();
+            readerFileStream = File.OpenRead(filePath);
+            obj = bf.Deserialize(readerFileStream);
+            readerFileStream.Close();
+            return obj;
         }
     }
 }

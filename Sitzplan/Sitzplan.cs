@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace Sitzplan
 {
@@ -11,6 +14,7 @@ namespace Sitzplan
     {
         public List<TSitzplan.Schueler> schueler;
         //private int Bewertung = 0;
+        [Serializable]
         public struct Schueler {
             public Schueler(int Nummer, String Schueler, String W1, String W2, String W3, String W4, String W5)
             {
@@ -37,7 +41,9 @@ namespace Sitzplan
         public List<List<List<Schueler>>> alleKombinationen;
         public List<List<Schueler>> gewuenschtePaerchen = new List<List<Schueler>>();
         public string safe;
-        
+        public IFormatter formatter = new BinaryFormatter();
+
+
         public void BelegeKlassenlisteName(String Name)
         {
 
@@ -64,6 +70,7 @@ namespace Sitzplan
             BildeGewuenschtePaerchen();
             EntferneDopplungen();
             SortierePaare();
+            FindeKombinationen();
             //    BildeAlleKombinationen();
             // MessageBox.Show(safe);
         }
@@ -148,6 +155,19 @@ namespace Sitzplan
                     Schueler s1 = Paar[0];
                     Paar[0] = Paar[1];
                     Paar[1] = s1;
+                }
+            }
+        }
+        private void FindeKombinationen()
+        {
+            for (int i = 0; i < (schueler.Count/2); i++)
+            {
+                foreach (List<Schueler> ASchueler in gewuenschtePaerchen)
+                {
+                    foreach (List<Schueler> BSchueler in gewuenschtePaerchen)
+                    {
+                       // hmmmmmmmmmmmmmmmmmmmmmm, das muss Johannes, der Depp vom Dienst, in einem wacheren Zustand erledigen;
+                    }
                 }
             }
         }
