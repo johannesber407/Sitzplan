@@ -136,8 +136,14 @@ namespace Sitzplan
                     }*/
                     if(Schueler[ComboboxSchueler.SelectedIndex].Wunsch1 != null || Schueler[ComboboxSchueler.SelectedIndex].Wunsch2 != null || Schueler[ComboboxSchueler.SelectedIndex].Wunsch3 != null || Schueler[ComboboxSchueler.SelectedIndex].Wunsch4 != null || Schueler[ComboboxSchueler.SelectedIndex].Wunsch5 != null)
                 {
-               //     WuenscheWerdenNeuGeladen = true;
-              //      WuenscheNeuLaden();
+                    String Wun= null;
+                    TSitzplan.Schueler temp = Schueler[ComboboxSchueler.SelectedIndex];
+                    temp.Wunsch1 = Wun;
+                    temp.Wunsch2 = Wun;
+                    temp.Wunsch3 = Wun;
+                    temp.Wunsch4 = Wun;
+                    temp.Wunsch5 = Wun;
+                    Schueler[ComboboxSchueler.SelectedIndex] = temp;
                 }
                 
                
