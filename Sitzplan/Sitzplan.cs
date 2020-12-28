@@ -13,10 +13,10 @@ namespace Sitzplan
     public class TSitzplan
     {
         public List<TSitzplan.Schueler> schueler;
-        //private int Bewertung = 0;
+        private int Bewertung = 0;/// muss 0 sein!
         [Serializable]
         public struct Schueler {
-            public Schueler(int Nummer, String Schueler, String W1, String W2, String W3, String W4, String W5)
+            public Schueler(int Nummer, String Schueler, String W1, String W2, String W3, String W4, String W5, List<string> Bl)
             {
                 Nr = Nummer;
                 Name = Schueler;
@@ -25,6 +25,8 @@ namespace Sitzplan
                 Wunsch3 = W3;
                 Wunsch4 = W4;
                 Wunsch5 = W5;
+                //Blockiert = new List<string>();
+                Blockiert = Bl;
             }
             public int Nr { get; set; }
             public String Name { get; set; }
@@ -33,15 +35,19 @@ namespace Sitzplan
             public String Wunsch3 { get; set; }
             public String Wunsch4 { get; set; }
             public String Wunsch5 { get; set; }
+            public List<string> Blockiert { get; set; }
         }
         public List<List<List<Schueler>>> allePäärchen;
         public List<Schueler> lückenfüller1 = new List<Schueler>();
         public List<List<Schueler>> lückenfüller2 = new List<List<Schueler>>();
         public List<List<List<Schueler>>> lückenfüller3 = new List<List<List<Schueler>>>();
         public List<List<List<Schueler>>> alleKombinationen;
+        public List<List<Schueler>> EineKombination;
+        public List<List<Schueler>> ErgebnisKombination = new List<List<Schueler>>();
         public List<List<Schueler>> gewuenschtePaerchen = new List<List<Schueler>>();
         public string safe;
         public IFormatter formatter = new BinaryFormatter();
+        public int Iterationen;
 
 
         public void BelegeKlassenlisteName(String Name)
@@ -61,7 +67,7 @@ namespace Sitzplan
             lückenfüller3.Add(lückenfüller2);
             if (temp.Count() % 2 != 0)
             {
-                temp.Add(new Schueler(0, null, null, null, null, null, null));
+                temp.Add(new Schueler(0, null, null, null, null, null, null, null));
             }
             schueler = temp;
             allePäärchen = new List<List<List<Schueler>>>();
@@ -160,24 +166,40 @@ namespace Sitzplan
         }
         private void FindeKombinationen()
         {
-            int k = 0;
-
-            foreach (List<Schueler> ASchueler in gewuenschtePaerchen)
-                {
-                
-                alleKombinationen.Add(new List<List<Schueler>>());
-                alleKombinationen[k].Add(ASchueler);
-                for (int i = 0; i < (schueler.Count / 2); i++)
-                    {
-                    
-                    foreach (List<Schueler> BSchueler in gewuenschtePaerchen)
-                        {
-                            
-                        }
-                    }
-                k++;
-                }
             
+
+            for (int i = 0; i < Iterationen; i++)
+            {
+                EineKombination = new List<List<Schueler>>();
+                List<Schueler> Namen = new List<Schueler>();
+                foreach (Schueler schueler1 in schueler)
+                {
+                    Namen.Add(schueler1);
+                }
+
+                for (int j = 0; j < schueler.Count() / 2; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 1; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[j].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+                
+             //   if (Score(EineKombination) > Bewertung)
+                //{
+                    if (KombinationBlockiert(EineKombination))
+                    {
+                        Bewertung = Score(EineKombination);
+                        ErgebnisKombination = EineKombination;
+                    }
+                    
+               // }
+
+            }
         }
         private void BildeAlleKombinationen()
         {
@@ -312,6 +334,27 @@ namespace Sitzplan
             alleKombinationen.Add(sicher);
             
         }
-        
+        private bool KombinationBlockiert(List<List<Schueler>> Kombination)
+        {
+            foreach(List<Schueler> paar in Kombination)
+            {
+                foreach(string b in paar[0].Blockiert)
+                {
+                    if (b.Equals(paar[1].Name))
+                    {
+                        return false;
+                    }
+                }
+                foreach (string b in paar[1].Blockiert)
+                {
+                    if (b.Equals(paar[0].Name))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }   
     }
+    
 }

@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Sitzplan"
         mc:Ignorable="d"
         Title="MainWindow" SizeToContent="WidthAndHeight">
+    
     <Grid>
         <Menu>
             <MenuItem Header="Datei">
@@ -22,9 +23,16 @@
                             <TextBox Name="SchuelerEingeben" Width="180" Margin="10"  KeyDown="SchuelerEingeben_KeyDown"/>
                             <Button Name="NeuerSchueler" Content="Eingeben" Margin="10" Click="NeuerSchueler_Click"/>
                         </StackPanel>
-                        <DataGrid x:Name="DataGridKlassenliste" ItemsSource="{Binding Schueler}" AutoGenerateColumns="True" IsReadOnly="True" >
+                        <DataGrid x:Name="DataGridKlassenliste"  AutoGenerateColumns="False" IsReadOnly="True" >
                             <DataGrid.Columns>
-                                
+                                <DataGridTextColumn Header="Nr"  Binding="{Binding Nr}"/>
+                                <DataGridTextColumn Header="Name"  Binding="{Binding Name}"/>
+                                <DataGridTextColumn Header="Wunsch 1"  Binding="{Binding Wunsch1}"/>
+                                <DataGridTextColumn Header="Wunsch 2"  Binding="{Binding Wunsch2}"/>
+                                <DataGridTextColumn Header="Wunsch 3"  Binding="{Binding Wunsch3}"/>
+                                <DataGridTextColumn Header="Wunsch 4"  Binding="{Binding Wunsch4}"/>
+                                <DataGridTextColumn Header="Wunsch 5"  Binding="{Binding Wunsch5}"/>
+                                <DataGridTextColumn Header="Blockiert" Binding="{Binding Blockiert}"/>
                             </DataGrid.Columns>
                             
                         </DataGrid>
@@ -75,17 +83,18 @@
                         <GroupBox Header="Blockieren" Margin="10">
                             <StackPanel Orientation="Vertical">
                                 <Label HorizontalAlignment="Center">Diese Kombination soll verboten werden:</Label>
-                                <ComboBox Name="Blockieren1" Width="180"></ComboBox>
+                                <ComboBox Name="Blockieren1" Width="180" ItemsSource="{Binding Schueler}" SelectionChanged="Blockieren1_SelectionChanged"></ComboBox>
                                 <Label HorizontalAlignment="Center">mit</Label>
-                                <ComboBox  Name="Blockieren2" Width="180"></ComboBox>
+                                <ComboBox  Name="Blockieren2" Width="180" ItemsSource="{Binding Schueler}" IsEnabled="false"></ComboBox>
                                 <Button Name="BlockierenEingeben" Content="Eingeben" Width="100" Click="BlockierenEingeben_Click" Margin="10"/>
                             </StackPanel>
                         </GroupBox>
                     </StackPanel>
                     <StackPanel Orientation="Vertical">
                             <GroupBox Header="Sitzplan" Margin="10">
-                            <DataGrid x:Name="DataGridErgebnis" ItemsSource="{Binding Schueler}" AutoGenerateColumns="True" IsReadOnly="True" Width="150">
+                            <DataGrid x:Name="DataGridErgebnis"  AutoGenerateColumns="True" IsReadOnly="True" Width="150">
                                 <DataGrid.Columns>
+                                    
 
                                 </DataGrid.Columns>
 
@@ -99,6 +108,8 @@
 
                 <Button Name="ButtonBerechnen" Content="_Berechnen" Click="ButtonBerechnen_Click" Margin="10"/>
                 <Button Name="ButtonBeenden" Content="B_eenden" Click="ButtonBeenden_Click" Margin="10"/>
+                <Label VerticalAlignment="Center">Iterationen:</Label>
+                <ComboBox Name="Iterationen"  Width="180" Margin="10" ItemsSource="{Binding I}" SelectedIndex="4"/>
             </StackPanel>
         </StackPanel>
     </Grid>

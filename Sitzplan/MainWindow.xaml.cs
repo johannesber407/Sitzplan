@@ -19,6 +19,7 @@ using Sitzplan;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Data;
 
 namespace Sitzplan
 {
@@ -31,11 +32,11 @@ namespace Sitzplan
         
         int AnzahlEingetrageneSchueler = 0;
         public List<TSitzplan.Schueler> Schueler = new List<TSitzplan.Schueler>();
-        
+        private List<int> I = new List<int> { 10, 100, 1000, 100000, 1000000, 10000000, 100000000 };
         List<TSitzplan.Schueler> W = new List<TSitzplan.Schueler>();
         TSitzplan sitzplan = new TSitzplan();
-        
-        
+        //public Enum BlockierteListe;
+        public List<List<TSitzplan.Schueler>> ErgebnisKombination = new List<List<TSitzplan.Schueler>>();
         // bool WuenscheWerdenNeuGeladen = false;
         public MainWindow()
         {
@@ -43,8 +44,13 @@ namespace Sitzplan
             DataGridKlassenliste.ItemsSource = Schueler;
             ComboboxSchueler.ItemsSource = Schueler;
             ComboboxSchueler.DisplayMemberPath = "Name";
-         //   DataGridErgebnis.ItemsSource
+            Iterationen.ItemsSource = I;
+            Blockieren1.ItemsSource = Schueler;
+            Blockieren1.DisplayMemberPath = "Name";
             
+         //   DataGridErgebnis.ItemsSource
+
+
         }
 
         private void ButtonBeenden_Click(object sender, RoutedEventArgs e)
@@ -54,8 +60,10 @@ namespace Sitzplan
 
         private void ButtonBerechnen_Click(object sender, RoutedEventArgs e)
         {
+            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
             sitzplan.schueler = Schueler;
             sitzplan.BerechneSitzplan(Schueler);
+            ZeigeErgebnisAn();
         }
 
         private void NeuerSchueler_Click(object sender, RoutedEventArgs e)
@@ -90,7 +98,7 @@ namespace Sitzplan
             }
             AnzahlEingetrageneSchueler++;
 
-            TSitzplan.Schueler eingetragenerSchueler = new TSitzplan.Schueler(AnzahlEingetrageneSchueler, Name, null, null, null, null, null);
+            TSitzplan.Schueler eingetragenerSchueler = new TSitzplan.Schueler(AnzahlEingetrageneSchueler, Name, null, null, null, null, null, new List<string>());
             Schueler.Add(eingetragenerSchueler);
             SchuelerEingeben.Clear();
             UpdateTabelle();
@@ -122,7 +130,12 @@ namespace Sitzplan
 
         private void BlockierenEingeben_Click(object sender, RoutedEventArgs e)
         {
+            Schueler[Blockieren1.SelectedIndex].Blockiert.Add(Schueler[Blockieren2.SelectedIndex].Name);
+            Schueler[Blockieren2.SelectedIndex].Blockiert.Add(Schueler[Blockieren1.SelectedIndex].Name);
 
+            Blockieren1.SelectedIndex = ComboboxSchueler.SelectedIndex;
+            Blockieren2.SelectedIndex = ComboboxSchueler.SelectedIndex;
+            Blockieren2.IsEnabled = false;
         }
 
         private void ComboboxSchueler_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -181,7 +194,7 @@ namespace Sitzplan
         {
 
             TSitzplan.Schueler item1, item2, item3, item4, item5, item6;
-            item1 = new TSitzplan.Schueler(Schueler[ComboboxSchueler.SelectedIndex].Nr, Schueler[ComboboxSchueler.SelectedIndex].Name, Schueler[ComboboxSchueler.SelectedIndex].Wunsch1, Schueler[ComboboxSchueler.SelectedIndex].Wunsch2, Schueler[ComboboxSchueler.SelectedIndex].Wunsch3, Schueler[ComboboxSchueler.SelectedIndex].Wunsch4, Schueler[ComboboxSchueler.SelectedIndex].Wunsch5);
+            item1 = new TSitzplan.Schueler(Schueler[ComboboxSchueler.SelectedIndex].Nr, Schueler[ComboboxSchueler.SelectedIndex].Name, Schueler[ComboboxSchueler.SelectedIndex].Wunsch1, Schueler[ComboboxSchueler.SelectedIndex].Wunsch2, Schueler[ComboboxSchueler.SelectedIndex].Wunsch3, Schueler[ComboboxSchueler.SelectedIndex].Wunsch4, Schueler[ComboboxSchueler.SelectedIndex].Wunsch5, Schueler[ComboboxSchueler.SelectedIndex].Blockiert);
             item2 = item1;
             item3 = item1;
             item4 = item1;
@@ -254,7 +267,7 @@ namespace Sitzplan
                 TSitzplan.Schueler s = Schueler[i];
                 if (s.Equals(item1))
                 {
-                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null);
+                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null);
                     
                 }
             }
@@ -263,7 +276,7 @@ namespace Sitzplan
                 TSitzplan.Schueler s = Schueler[i];
                 if (s.Equals(item2))
                 {
-                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null);
+                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null);
                     ComboboxWunsch1.SelectedIndex = i;
                 }
             }
@@ -272,7 +285,7 @@ namespace Sitzplan
                 TSitzplan.Schueler s = Schueler[i];
                 if (s.Equals(item3))
                 {
-                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null);
+                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null);
                 }
             }
             for (int i = 0; i < Schueler.Count; i++)
@@ -280,7 +293,7 @@ namespace Sitzplan
                 TSitzplan.Schueler s = Schueler[i];
                 if (s.Equals(item4))
                 {
-                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null);
+                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null);
                 }
             }
             for (int i = 0; i < Schueler.Count; i++)
@@ -288,7 +301,7 @@ namespace Sitzplan
                 TSitzplan.Schueler s = Schueler[i];
                 if (s.Equals(item5))
                 {
-                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null);
+                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null);
                 }
             }
             for (int i = 0; i < Schueler.Count; i++)
@@ -296,7 +309,7 @@ namespace Sitzplan
                 TSitzplan.Schueler s = Schueler[i];
                 if (s.Equals(item6))
                 {
-                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null);
+                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null);
                 }
             }
             
@@ -601,7 +614,7 @@ namespace Sitzplan
             }
             catch
             {
-                System.Windows.MessageBox.Show("Du machst da was falsch.");
+                System.Windows.MessageBox.Show("Du machst da was falsch. Ein Techniker wurde informiert. (Nee Spaß, diese Fehlermeldung sollte eigentlich nie erscheinen. Keine Ahnung was man jetzt machen soll)");
             }
             MainWindow window = new MainWindow();
             window.Show(); // Returns immediately
@@ -623,6 +636,66 @@ namespace Sitzplan
             obj = bf.Deserialize(readerFileStream);
             readerFileStream.Close();
             return obj;
+        }
+
+        private void Blockieren1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Blockieren2.IsEnabled = true;
+            TSitzplan.Schueler item1, item2;
+            if (Blockieren1.SelectedIndex != -1)
+            {
+                item1 = new TSitzplan.Schueler(Schueler[Blockieren1.SelectedIndex].Nr, Schueler[Blockieren1.SelectedIndex].Name, Schueler[Blockieren1.SelectedIndex].Wunsch1, Schueler[Blockieren1.SelectedIndex].Wunsch2, Schueler[Blockieren1.SelectedIndex].Wunsch3, Schueler[Blockieren1.SelectedIndex].Wunsch4, Schueler[Blockieren1.SelectedIndex].Wunsch5, Schueler[Blockieren1.SelectedIndex].Blockiert);
+
+                item2 = item1;
+                if (ComboboxWunsch1.SelectedIndex != -1)
+                {
+
+                    for (int i = 0; i < Schueler.Count; i++)
+                    {
+                        if (Schueler[i].Name == Schueler[ComboboxWunsch1.SelectedIndex].Name)
+                        {
+                            item2 = Schueler[i];
+                        }
+                    }
+                }
+
+                List<TSitzplan.Schueler> Liste = new List<TSitzplan.Schueler>();
+                foreach (TSitzplan.Schueler schueler in Schueler)
+                {
+                    Liste.Add(schueler);
+
+                }
+                for (int i = 0; i < Schueler.Count; i++)
+                {
+                    TSitzplan.Schueler s = Schueler[i];
+                    if (s.Equals(item1))
+                    {
+                        Liste[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null);
+
+                    }
+                }
+
+                Blockieren2.ItemsSource = Liste;
+                Blockieren2.DisplayMemberPath = "Name";
+            }
+        }
+        private void ZeigeErgebnisAn()
+        {
+            List<string> Ergebnis = new List<string>();
+           // string test = "hallo";
+            ErgebnisKombination = sitzplan.ErgebnisKombination;
+            foreach(List<TSitzplan.Schueler> schuelers in ErgebnisKombination)
+            {
+                Ergebnis.Add(schuelers[0].Name + ", " + schuelers[1].Name);
+            }
+            List<TErgebnis.Ergebnis> Endergebnis = new List<TErgebnis.Ergebnis>();
+            foreach(string Paar in Ergebnis)
+            {
+                TErgebnis.Ergebnis ergebnis = new TErgebnis.Ergebnis(Paar);
+                Endergebnis.Add(ergebnis);
+            }
+            DataGridErgebnis.ItemsSource = Endergebnis;
+            DataGridErgebnis.DisplayMemberPath = "Paar";
         }
     }
 }
