@@ -160,16 +160,24 @@ namespace Sitzplan
         }
         private void FindeKombinationen()
         {
-            for (int i = 0; i < (schueler.Count/2); i++)
-            {
-                foreach (List<Schueler> ASchueler in gewuenschtePaerchen)
+            int k = 0;
+
+            foreach (List<Schueler> ASchueler in gewuenschtePaerchen)
                 {
-                    foreach (List<Schueler> BSchueler in gewuenschtePaerchen)
+                
+                alleKombinationen.Add(new List<List<Schueler>>());
+                alleKombinationen[k].Add(ASchueler);
+                for (int i = 0; i < (schueler.Count / 2); i++)
                     {
-                       // hmmmmmmmmmmmmmmmmmmmmmm, das muss Johannes, der Depp vom Dienst, in einem wacheren Zustand erledigen;
+                    
+                    foreach (List<Schueler> BSchueler in gewuenschtePaerchen)
+                        {
+                            
+                        }
                     }
+                k++;
                 }
-            }
+            
         }
         private void BildeAlleKombinationen()
         {
