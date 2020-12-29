@@ -13,7 +13,7 @@ namespace Sitzplan
     public class TSitzplan
     {
         public List<TSitzplan.Schueler> schueler;
-        private int Bewertung = 0;/// muss 0 sein!
+        public int Bewertung = 0;/// muss 0 sein!
         [Serializable]
         public struct Schueler {
             public Schueler(int Nummer, String Schueler, String W1, String W2, String W3, String W4, String W5, List<string> Bl)
@@ -57,29 +57,747 @@ namespace Sitzplan
         
         public void BerechneSitzplan(List<TSitzplan.Schueler> temp)
         {
-            lückenfüller1 = new List<Schueler>();
-            lückenfüller2 = new List<List<Schueler>>();
-            lückenfüller3 = new List<List<List<Schueler>>>();
-            lückenfüller1.Add(schueler[0]);
-            lückenfüller2.Add(lückenfüller1);
-            lückenfüller2.Add(lückenfüller1);
-            lückenfüller2.Add(lückenfüller1);
-            lückenfüller3.Add(lückenfüller2);
+            
             if (temp.Count() % 2 != 0)
             {
-                temp.Add(new Schueler(0, null, null, null, null, null, null, null));
+                temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
             }
             schueler = temp;
             allePäärchen = new List<List<List<Schueler>>>();
-         //   BildeAllePäärchen();
+         
             alleKombinationen = new List<List<List<Schueler>>>();
-            BildeGewuenschtePaerchen();
-            EntferneDopplungen();
-            SortierePaare();
-            FindeKombinationen();
-            //    BildeAlleKombinationen();
-            // MessageBox.Show(safe);
+            for (int i = 0; i < Iterationen; i++)
+            {
+                EineKombination = new List<List<Schueler>>();
+                List<Schueler> Namen = new List<Schueler>();
+                foreach (Schueler schueler1 in schueler)
+                {
+                    Namen.Add(schueler1);
+                }
+
+                for (int j = 0; j < schueler.Count() / 2; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 1; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[j].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+
+                if (Score(EineKombination) > Bewertung)
+                {
+                    if (KombinationBlockiert(EineKombination))
+                    {
+                        Bewertung = Score(EineKombination);
+                        ErgebnisKombination = EineKombination;
+                    }
+
+                }
+
+            }
+
         }
+        public void BerechneBlockiertRandomSitzplan(List<TSitzplan.Schueler> temp)
+        {
+            List<TSitzplan.Schueler> neuerAufruf = new List<Schueler>();
+            neuerAufruf = temp;
+            if (temp.Count() % 2 != 0)
+            {
+                temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
+            }
+            schueler = temp;
+
+
+            EineKombination = new List<List<Schueler>>();
+            List<Schueler> Namen = new List<Schueler>();
+            foreach (Schueler schueler1 in schueler)
+            {
+                Namen.Add(schueler1);
+            }
+
+            for (int j = 0; j < schueler.Count() / 2; j++)
+            {
+                EineKombination.Add(new List<Schueler>());
+                for (int k = 0; k <= 1; k++)
+                {
+                    var random = new Random();
+                    int index = random.Next(Namen.Count);
+                    EineKombination[j].Add(Namen[index]);
+                    Namen.RemoveAt(index);
+                }
+            }
+            if (KombinationBlockiert(EineKombination))
+            {
+                ErgebnisKombination = EineKombination;
+                return;
+            }
+            else
+            {
+                BerechneBlockiertRandomSitzplan(neuerAufruf);
+            }
+
+
+
+        }
+
+        
+
+        public void BerechneTrueRandomSitzplan(List<TSitzplan.Schueler> temp)
+        {
+            if (temp.Count() % 2 != 0)
+            {
+                temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
+            }
+            schueler = temp;
+
+
+            EineKombination = new List<List<Schueler>>();
+            List<Schueler> Namen = new List<Schueler>();
+            foreach (Schueler schueler1 in schueler)
+            {
+                Namen.Add(schueler1);
+            }
+
+            for (int j = 0; j < schueler.Count() / 2; j++)
+            {
+                EineKombination.Add(new List<Schueler>());
+                for (int k = 0; k <= 1; k++)
+                {
+                    var random = new Random();
+                    int index = random.Next(Namen.Count);
+                    EineKombination[j].Add(Namen[index]);
+                    Namen.RemoveAt(index);
+                }
+            }
+
+
+            
+            ErgebnisKombination = EineKombination;
+
+        }
+        public void BerechneBlockiertRandomSitzplanZweiDreiZwei(List<Schueler> temp)
+        {
+            List<TSitzplan.Schueler> neuerAufruf = new List<Schueler>();
+            neuerAufruf = temp;
+            int t = 7 - (temp.Count() % 7);
+
+            if (temp.Count() % 7 != 0)
+            {
+                for (int i = 0; i < t; i++)
+                {
+                    temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
+                }
+            }
+            schueler = temp;
+            int Reihen = schueler.Count() / 7;
+            for (int i = 0; i < Iterationen; i++)
+            {
+                EineKombination = new List<List<Schueler>>();
+                List<Schueler> Namen = new List<Schueler>();
+                foreach (Schueler schueler1 in schueler)
+                {
+                    Namen.Add(schueler1);
+                }
+
+
+                for (int j = 0; j < Reihen * 2; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 1; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[j].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+                for (int j = 0; j < Reihen; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 2; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[EineKombination.Count - 1].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+
+                
+                    if (KombinationBlockiert(EineKombination))
+                    {
+                        Bewertung = ScoreZweiDreiZwei(EineKombination);
+                        ErgebnisKombination = EineKombination;
+                    }
+                else
+                {
+                    BerechneBlockiertRandomSitzplanZweiDreiZwei(neuerAufruf);
+                }
+
+                
+
+            }
+        }
+
+        public void BerechneTrueRandomSitzplanZweiDreiZwei(List<Schueler> temp)
+        {
+            int t = 7 - (temp.Count() % 7);
+
+            if (temp.Count() % 7 != 0)
+            {
+                for (int i = 0; i < t; i++)
+                {
+                    temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
+                }
+            }
+            schueler = temp;
+            int Reihen = schueler.Count() / 7;
+            
+                EineKombination = new List<List<Schueler>>();
+                List<Schueler> Namen = new List<Schueler>();
+                foreach (Schueler schueler1 in schueler)
+                {
+                    Namen.Add(schueler1);
+                }
+
+
+                for (int j = 0; j < Reihen * 2; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 1; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[j].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+                for (int j = 0; j < Reihen; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 2; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[EineKombination.Count - 1].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+
+               
+                        
+                        ErgebnisKombination = EineKombination;
+                    
+
+            
+        }
+
+        public void BerechneSitzplanZweiDreiZwei(List<Schueler> temp)
+        {
+            int t = 7 - (temp.Count() % 7);
+            
+            if (temp.Count() % 7 != 0)
+            {
+                for (int i = 0; i < t; i++)
+                {
+                    temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
+                }
+            }
+            schueler = temp;
+            int Reihen = schueler.Count() / 7;
+            for (int i = 0; i < Iterationen; i++)
+            {
+                EineKombination = new List<List<Schueler>>();
+                List<Schueler> Namen = new List<Schueler>();
+                foreach (Schueler schueler1 in schueler)
+                {
+                    Namen.Add(schueler1);
+                }
+                
+
+                for (int j = 0; j < Reihen * 2; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 1; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[j].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+                for(int j = 0; j < Reihen; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 2; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[EineKombination.Count - 1].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+
+                if (ScoreZweiDreiZwei(EineKombination) > Bewertung)
+                {
+                    if (KombinationBlockiert(EineKombination))
+                    {
+                        Bewertung = ScoreZweiDreiZwei(EineKombination);
+                        ErgebnisKombination = EineKombination;
+                    }
+
+                }
+
+            }
+        }
+
+        public void BerechneSitzplanFuenfFuenf(List<Schueler> temp)
+        {
+            int t = 5 - (temp.Count() % 5);
+
+            if (temp.Count() % 5 != 0)
+            {
+                for (int i = 0; i < t; i++)
+                {
+                    temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
+                }
+            }
+            schueler = temp;
+            int Reihen = schueler.Count() / 5;
+            for (int i = 0; i < Iterationen; i++)
+            {
+                EineKombination = new List<List<Schueler>>();
+                List<Schueler> Namen = new List<Schueler>();
+                foreach (Schueler schueler1 in schueler)
+                {
+                    Namen.Add(schueler1);
+                }
+                for (int j = 0; j < Reihen; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 4; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[EineKombination.Count - 1].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+
+                if (ScoreFuenfFuenf(EineKombination) > Bewertung)
+                {
+                    if (KombinationBlockiert(EineKombination))
+                    {
+                        Bewertung = ScoreFuenfFuenf(EineKombination);
+                        ErgebnisKombination = EineKombination;
+                    }
+
+                }
+
+            }
+        }
+
+        public void BerechneBlockiertRandomSitzplanFuenfFuenf(List<Schueler> temp)
+        {
+            List<TSitzplan.Schueler> neuerAufruf = new List<Schueler>();
+            neuerAufruf = temp;
+            int t = 5 - (temp.Count() % 5);
+
+            if (temp.Count() % 5 != 0)
+            {
+                for (int i = 0; i < t; i++)
+                {
+                    temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
+                }
+            }
+            schueler = temp;
+            int Reihen = schueler.Count() / 5;
+            
+                EineKombination = new List<List<Schueler>>();
+                List<Schueler> Namen = new List<Schueler>();
+                foreach (Schueler schueler1 in schueler)
+                {
+                    Namen.Add(schueler1);
+                }
+                for (int j = 0; j < Reihen; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 4; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[EineKombination.Count - 1].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+
+                
+                    if (KombinationBlockiert(EineKombination))
+                    {
+                        
+                        ErgebnisKombination = EineKombination;
+                    }
+            else
+            {
+                BerechneBlockiertRandomSitzplanFuenfFuenf(neuerAufruf);
+            }
+
+                
+
+            
+        }
+
+        public void BerechneTrueRandomSitzplanFuenfFuenf(List<Schueler> temp)
+        {
+            int t = 5 - (temp.Count() % 5);
+
+            if (temp.Count() % 5 != 0)
+            {
+                for (int i = 0; i < t; i++)
+                {
+                    temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
+                }
+            }
+            schueler = temp;
+            int Reihen = schueler.Count() / 5;
+            
+                EineKombination = new List<List<Schueler>>();
+                List<Schueler> Namen = new List<Schueler>();
+                foreach (Schueler schueler1 in schueler)
+                {
+                    Namen.Add(schueler1);
+                }
+                for (int j = 0; j < Reihen; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 4; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[EineKombination.Count - 1].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+
+               
+                       
+                        ErgebnisKombination = EineKombination;
+                 
+
+            
+            
+        }
+
+        public void BerechneSitzplanZweiVierZwei(List<Schueler> temp)
+        {
+            int t = 8 - (temp.Count() % 8);
+
+            if (temp.Count() % 8 != 0)
+            {
+                for (int i = 0; i < t; i++)
+                {
+                    temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
+                }
+            }
+            schueler = temp;
+            int Reihen = schueler.Count() / 8;
+            for (int i = 0; i < Iterationen; i++)
+            {
+                EineKombination = new List<List<Schueler>>();
+                List<Schueler> Namen = new List<Schueler>();
+                foreach (Schueler schueler1 in schueler)
+                {
+                    Namen.Add(schueler1);
+                }
+
+
+                for (int j = 0; j < Reihen * 2; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 1; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[j].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+                for (int j = 0; j < Reihen; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 3; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[EineKombination.Count - 1].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+
+                if (ScoreZweiVierZwei(EineKombination) > Bewertung)
+                {
+                    if (KombinationBlockiert(EineKombination))
+                    {
+                        Bewertung = ScoreZweiVierZwei(EineKombination);
+                        ErgebnisKombination = EineKombination;
+                    }
+
+                }
+
+            }
+        }
+
+        public void BerechneTrueRandomSitzplanVierVier(List<Schueler> temp)
+        {
+            int t = 4 - (temp.Count() % 4);
+
+            if (temp.Count() % 4 != 0)
+            {
+                for (int i = 0; i < t; i++)
+                {
+                    temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
+                }
+            }
+            schueler = temp;
+            int Reihen = schueler.Count() / 4;
+            
+                EineKombination = new List<List<Schueler>>();
+                List<Schueler> Namen = new List<Schueler>();
+                foreach (Schueler schueler1 in schueler)
+                {
+                    Namen.Add(schueler1);
+                }
+                for (int j = 0; j < Reihen; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 3; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[EineKombination.Count - 1].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+
+               
+                        
+                        ErgebnisKombination = EineKombination;
+
+            
+        }
+
+        public void BerechneBlockiertRandomSitzplanZweiVierZwei(List<Schueler> temp)
+        {
+            List<TSitzplan.Schueler> neuerAufruf = new List<Schueler>();
+            neuerAufruf = temp;
+            int t = 8 - (temp.Count() % 8);
+
+            if (temp.Count() % 8 != 0)
+            {
+                for (int i = 0; i < t; i++)
+                {
+                    temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
+                }
+            }
+            schueler = temp;
+            int Reihen = schueler.Count() / 8;
+            
+                EineKombination = new List<List<Schueler>>();
+                List<Schueler> Namen = new List<Schueler>();
+                foreach (Schueler schueler1 in schueler)
+                {
+                    Namen.Add(schueler1);
+                }
+
+
+                for (int j = 0; j < Reihen * 2; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 1; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[j].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+                for (int j = 0; j < Reihen; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 3; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[EineKombination.Count - 1].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+
+               
+                    if (KombinationBlockiert(EineKombination))
+                    {
+                        
+                        ErgebnisKombination = EineKombination;
+                    }
+            else
+            {
+                BerechneBlockiertRandomSitzplanZweiVierZwei(neuerAufruf);
+            }
+
+                
+
+            
+        }
+
+        public void BerechneBlockiertRandomSitzplanVierVier(List<Schueler> temp)
+        {
+            List<TSitzplan.Schueler> neuerAufruf = new List<Schueler>();
+            neuerAufruf = temp;
+            int t = 4 - (temp.Count() % 4);
+
+            if (temp.Count() % 4 != 0)
+            {
+                for (int i = 0; i < t; i++)
+                {
+                    temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
+                }
+            }
+            schueler = temp;
+            int Reihen = schueler.Count() / 4;
+            
+                EineKombination = new List<List<Schueler>>();
+                List<Schueler> Namen = new List<Schueler>();
+                foreach (Schueler schueler1 in schueler)
+                {
+                    Namen.Add(schueler1);
+                }
+                for (int j = 0; j < Reihen; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 3; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[EineKombination.Count - 1].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+
+                
+                    if (KombinationBlockiert(EineKombination))
+                    {
+                        
+                        ErgebnisKombination = EineKombination;
+                    }
+            else
+            {
+                BerechneBlockiertRandomSitzplanVierVier(neuerAufruf);
+            }
+
+                
+
+            
+        }
+
+        public void BerechneTrueRandomSitzplanZweiVierZwei(List<Schueler> temp)
+        {
+            int t = 8 - (temp.Count() % 8);
+
+            if (temp.Count() % 8 != 0)
+            {
+                for (int i = 0; i < t; i++)
+                {
+                    temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
+                }
+            }
+            schueler = temp;
+            int Reihen = schueler.Count() / 8;
+            
+                EineKombination = new List<List<Schueler>>();
+                List<Schueler> Namen = new List<Schueler>();
+                foreach (Schueler schueler1 in schueler)
+                {
+                    Namen.Add(schueler1);
+                }
+
+
+                for (int j = 0; j < Reihen * 2; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 1; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[j].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+                for (int j = 0; j < Reihen; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 3; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[EineKombination.Count - 1].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+                        
+                        ErgebnisKombination = EineKombination;
+
+            
+        }
+
+        public void BerechneSitzplanVierVier(List<Schueler> temp)
+        {
+            int t = 4 - (temp.Count() % 4);
+
+            if (temp.Count() % 4 != 0)
+            {
+                for (int i = 0; i < t; i++)
+                {
+                    temp.Add(new Schueler(0, null, null, null, null, null, null, new List<string>()));
+                }
+            }
+            schueler = temp;
+            int Reihen = schueler.Count() / 4;
+            for (int i = 0; i < Iterationen; i++)
+            {
+                EineKombination = new List<List<Schueler>>();
+                List<Schueler> Namen = new List<Schueler>();
+                foreach (Schueler schueler1 in schueler)
+                {
+                    Namen.Add(schueler1);
+                }
+                for (int j = 0; j < Reihen; j++)
+                {
+                    EineKombination.Add(new List<Schueler>());
+                    for (int k = 0; k <= 3; k++)
+                    {
+                        var random = new Random();
+                        int index = random.Next(Namen.Count);
+                        EineKombination[EineKombination.Count - 1].Add(Namen[index]);
+                        Namen.RemoveAt(index);
+                    }
+                }
+
+                if (ScoreVierVier(EineKombination) > Bewertung)
+                {
+                    if (KombinationBlockiert(EineKombination))
+                    {
+                        Bewertung = ScoreVierVier(EineKombination);
+                        ErgebnisKombination = EineKombination;
+                    }
+
+                }
+
+            }
+        }
+
         private void BildeGewuenschtePaerchen()
         {
             foreach(Schueler ASchueler in schueler)
@@ -168,38 +886,7 @@ namespace Sitzplan
         {
             
 
-            for (int i = 0; i < Iterationen; i++)
-            {
-                EineKombination = new List<List<Schueler>>();
-                List<Schueler> Namen = new List<Schueler>();
-                foreach (Schueler schueler1 in schueler)
-                {
-                    Namen.Add(schueler1);
-                }
-
-                for (int j = 0; j < schueler.Count() / 2; j++)
-                {
-                    EineKombination.Add(new List<Schueler>());
-                    for (int k = 0; k <= 1; k++)
-                    {
-                        var random = new Random();
-                        int index = random.Next(Namen.Count);
-                        EineKombination[j].Add(Namen[index]);
-                        Namen.RemoveAt(index);
-                    }
-                }
-                
-             //   if (Score(EineKombination) > Bewertung)
-                //{
-                    if (KombinationBlockiert(EineKombination))
-                    {
-                        Bewertung = Score(EineKombination);
-                        ErgebnisKombination = EineKombination;
-                    }
-                    
-               // }
-
-            }
+           
         }
         private void BildeAlleKombinationen()
         {
@@ -329,6 +1016,168 @@ namespace Sitzplan
             }
             return score;
         }
+        private int ScoreZweiDreiZwei(List<List<Schueler>> Kombination)
+        {
+            int score = 0;
+            foreach(List<Schueler> Tisch in Kombination)
+            {
+                if (Tisch.Count == 2)
+                {
+                    if (Tisch[0].Wunsch1 == Tisch[1].Name || Tisch[0].Wunsch2 == Tisch[1].Name || Tisch[0].Wunsch3 == Tisch[1].Name || Tisch[0].Wunsch4 == Tisch[1].Name || Tisch[0].Wunsch5 == Tisch[1].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[1].Wunsch1 == Tisch[0].Name || Tisch[1].Wunsch2 == Tisch[0].Name || Tisch[1].Wunsch3 == Tisch[0].Name || Tisch[1].Wunsch4 == Tisch[0].Name || Tisch[1].Wunsch5 == Tisch[0].Name)
+                    {
+                        score++;
+                    }
+                }
+                if (Tisch.Count == 3)
+                {
+                    if (Tisch[0].Wunsch1 == Tisch[1].Name || Tisch[0].Wunsch2 == Tisch[1].Name || Tisch[0].Wunsch3 == Tisch[1].Name || Tisch[0].Wunsch4 == Tisch[1].Name || Tisch[0].Wunsch5 == Tisch[1].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[1].Wunsch1 == Tisch[0].Name || Tisch[1].Wunsch2 == Tisch[0].Name || Tisch[1].Wunsch3 == Tisch[0].Name || Tisch[1].Wunsch4 == Tisch[0].Name || Tisch[1].Wunsch5 == Tisch[0].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[1].Wunsch1 == Tisch[2].Name || Tisch[1].Wunsch2 == Tisch[2].Name || Tisch[1].Wunsch3 == Tisch[2].Name || Tisch[1].Wunsch4 == Tisch[2].Name || Tisch[1].Wunsch5 == Tisch[2].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[2].Wunsch1 == Tisch[1].Name || Tisch[2].Wunsch2 == Tisch[1].Name || Tisch[2].Wunsch3 == Tisch[1].Name || Tisch[2].Wunsch4 == Tisch[1].Name || Tisch[2].Wunsch5 == Tisch[1].Name)
+                    {
+                        score++;
+                    }
+                }
+            }
+            return score;
+        }
+        private int ScoreZweiVierZwei(List<List<Schueler>> Kombination)
+        {
+            int score = 0;
+            foreach (List<Schueler> Tisch in Kombination)
+            {
+                if (Tisch.Count == 2)
+                {
+                    if (Tisch[0].Wunsch1 == Tisch[1].Name || Tisch[0].Wunsch2 == Tisch[1].Name || Tisch[0].Wunsch3 == Tisch[1].Name || Tisch[0].Wunsch4 == Tisch[1].Name || Tisch[0].Wunsch5 == Tisch[1].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[1].Wunsch1 == Tisch[0].Name || Tisch[1].Wunsch2 == Tisch[0].Name || Tisch[1].Wunsch3 == Tisch[0].Name || Tisch[1].Wunsch4 == Tisch[0].Name || Tisch[1].Wunsch5 == Tisch[0].Name)
+                    {
+                        score++;
+                    }
+                }
+                if (Tisch.Count == 4)
+                {
+                    if (Tisch[0].Wunsch1 == Tisch[1].Name || Tisch[0].Wunsch2 == Tisch[1].Name || Tisch[0].Wunsch3 == Tisch[1].Name || Tisch[0].Wunsch4 == Tisch[1].Name || Tisch[0].Wunsch5 == Tisch[1].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[1].Wunsch1 == Tisch[0].Name || Tisch[1].Wunsch2 == Tisch[0].Name || Tisch[1].Wunsch3 == Tisch[0].Name || Tisch[1].Wunsch4 == Tisch[0].Name || Tisch[1].Wunsch5 == Tisch[0].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[1].Wunsch1 == Tisch[2].Name || Tisch[1].Wunsch2 == Tisch[2].Name || Tisch[1].Wunsch3 == Tisch[2].Name || Tisch[1].Wunsch4 == Tisch[2].Name || Tisch[1].Wunsch5 == Tisch[2].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[2].Wunsch1 == Tisch[1].Name || Tisch[2].Wunsch2 == Tisch[1].Name || Tisch[2].Wunsch3 == Tisch[1].Name || Tisch[2].Wunsch4 == Tisch[1].Name || Tisch[2].Wunsch5 == Tisch[1].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[2].Wunsch1 == Tisch[3].Name || Tisch[2].Wunsch2 == Tisch[3].Name || Tisch[2].Wunsch3 == Tisch[3].Name || Tisch[2].Wunsch4 == Tisch[3].Name || Tisch[2].Wunsch5 == Tisch[3].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[3].Wunsch1 == Tisch[2].Name || Tisch[3].Wunsch2 == Tisch[2].Name || Tisch[3].Wunsch3 == Tisch[2].Name || Tisch[3].Wunsch4 == Tisch[2].Name || Tisch[3].Wunsch5 == Tisch[2].Name)
+                    {
+                        score++;
+                    }
+                }
+            }
+            return score;
+        }
+        private int ScoreVierVier(List<List<Schueler>> Kombination)
+        {
+            int score = 0;
+            foreach (List<Schueler> Tisch in Kombination)
+            {
+                if (Tisch.Count == 4)
+                {
+                    if (Tisch[0].Wunsch1 == Tisch[1].Name || Tisch[0].Wunsch2 == Tisch[1].Name || Tisch[0].Wunsch3 == Tisch[1].Name || Tisch[0].Wunsch4 == Tisch[1].Name || Tisch[0].Wunsch5 == Tisch[1].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[1].Wunsch1 == Tisch[0].Name || Tisch[1].Wunsch2 == Tisch[0].Name || Tisch[1].Wunsch3 == Tisch[0].Name || Tisch[1].Wunsch4 == Tisch[0].Name || Tisch[1].Wunsch5 == Tisch[0].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[1].Wunsch1 == Tisch[2].Name || Tisch[1].Wunsch2 == Tisch[2].Name || Tisch[1].Wunsch3 == Tisch[2].Name || Tisch[1].Wunsch4 == Tisch[2].Name || Tisch[1].Wunsch5 == Tisch[2].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[2].Wunsch1 == Tisch[1].Name || Tisch[2].Wunsch2 == Tisch[1].Name || Tisch[2].Wunsch3 == Tisch[1].Name || Tisch[2].Wunsch4 == Tisch[1].Name || Tisch[2].Wunsch5 == Tisch[1].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[2].Wunsch1 == Tisch[3].Name || Tisch[2].Wunsch2 == Tisch[3].Name || Tisch[2].Wunsch3 == Tisch[3].Name || Tisch[2].Wunsch4 == Tisch[3].Name || Tisch[2].Wunsch5 == Tisch[3].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[3].Wunsch1 == Tisch[2].Name || Tisch[3].Wunsch2 == Tisch[2].Name || Tisch[3].Wunsch3 == Tisch[2].Name || Tisch[3].Wunsch4 == Tisch[2].Name || Tisch[3].Wunsch5 == Tisch[2].Name)
+                    {
+                        score++;
+                    }
+                }
+            }
+            return score;
+        }
+        private int ScoreFuenfFuenf(List<List<Schueler>> Kombination)
+        {
+            int score = 0;
+            foreach (List<Schueler> Tisch in Kombination)
+            {
+                if (Tisch.Count == 5)
+                {
+                    if (Tisch[0].Wunsch1 == Tisch[1].Name || Tisch[0].Wunsch2 == Tisch[1].Name || Tisch[0].Wunsch3 == Tisch[1].Name || Tisch[0].Wunsch4 == Tisch[1].Name || Tisch[0].Wunsch5 == Tisch[1].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[1].Wunsch1 == Tisch[0].Name || Tisch[1].Wunsch2 == Tisch[0].Name || Tisch[1].Wunsch3 == Tisch[0].Name || Tisch[1].Wunsch4 == Tisch[0].Name || Tisch[1].Wunsch5 == Tisch[0].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[1].Wunsch1 == Tisch[2].Name || Tisch[1].Wunsch2 == Tisch[2].Name || Tisch[1].Wunsch3 == Tisch[2].Name || Tisch[1].Wunsch4 == Tisch[2].Name || Tisch[1].Wunsch5 == Tisch[2].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[2].Wunsch1 == Tisch[1].Name || Tisch[2].Wunsch2 == Tisch[1].Name || Tisch[2].Wunsch3 == Tisch[1].Name || Tisch[2].Wunsch4 == Tisch[1].Name || Tisch[2].Wunsch5 == Tisch[1].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[2].Wunsch1 == Tisch[3].Name || Tisch[2].Wunsch2 == Tisch[3].Name || Tisch[2].Wunsch3 == Tisch[3].Name || Tisch[2].Wunsch4 == Tisch[3].Name || Tisch[2].Wunsch5 == Tisch[3].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[3].Wunsch1 == Tisch[2].Name || Tisch[3].Wunsch2 == Tisch[2].Name || Tisch[3].Wunsch3 == Tisch[2].Name || Tisch[3].Wunsch4 == Tisch[2].Name || Tisch[3].Wunsch5 == Tisch[2].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[3].Wunsch1 == Tisch[4].Name || Tisch[3].Wunsch2 == Tisch[4].Name || Tisch[3].Wunsch3 == Tisch[4].Name || Tisch[3].Wunsch4 == Tisch[4].Name || Tisch[3].Wunsch5 == Tisch[4].Name)
+                    {
+                        score++;
+                    }
+                    if (Tisch[4].Wunsch1 == Tisch[3].Name || Tisch[4].Wunsch2 == Tisch[3].Name || Tisch[4].Wunsch3 == Tisch[3].Name || Tisch[4].Wunsch4 == Tisch[3].Name || Tisch[4].Wunsch5 == Tisch[3].Name)
+                    {
+                        score++;
+                    }
+                }
+            }
+            return score;
+        }
         private void sichereDenScheiß(List<List<Schueler>> sicher)
         {
             alleKombinationen.Add(sicher);
@@ -336,20 +1185,141 @@ namespace Sitzplan
         }
         private bool KombinationBlockiert(List<List<Schueler>> Kombination)
         {
-            foreach(List<Schueler> paar in Kombination)
+            
+            foreach(List<Schueler> Tisch in Kombination)
             {
-                foreach(string b in paar[0].Blockiert)
+                if (Tisch.Count == 2)
                 {
-                    if (b.Equals(paar[1].Name))
+                    foreach (string b in Tisch[0].Blockiert)
                     {
-                        return false;
+                        if (b.Equals(Tisch[1].Name))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (string b in Tisch[1].Blockiert)
+                    {
+                        if (b.Equals(Tisch[0].Name))
+                        {
+                            return false;
+                        }
                     }
                 }
-                foreach (string b in paar[1].Blockiert)
+                if (Tisch.Count == 3)
                 {
-                    if (b.Equals(paar[0].Name))
+                    foreach (string b in Tisch[0].Blockiert)
                     {
-                        return false;
+                        if (b.Equals(Tisch[1].Name))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (string b in Tisch[1].Blockiert)
+                    {
+                        if (b.Equals(Tisch[0].Name))
+                        {
+                            return false;
+                        }
+                        if (b.Equals(Tisch[2].Name))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (string b in Tisch[2].Blockiert)
+                    {
+                        if (b.Equals(Tisch[1].Name))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                if (Tisch.Count == 4)
+                {
+                    foreach (string b in Tisch[0].Blockiert)
+                    {
+                        if (b.Equals(Tisch[1].Name))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (string b in Tisch[1].Blockiert)
+                    {
+                        if (b.Equals(Tisch[0].Name))
+                        {
+                            return false;
+                        }
+                        if (b.Equals(Tisch[2].Name))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (string b in Tisch[2].Blockiert)
+                    {
+                        if (b.Equals(Tisch[1].Name))
+                        {
+                            return false;
+                        }
+                        if (b.Equals(Tisch[3].Name))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (string b in Tisch[3].Blockiert)
+                    {
+                        if (b.Equals(Tisch[2].Name))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                if (Tisch.Count == 5)
+                {
+                    foreach (string b in Tisch[0].Blockiert)
+                    {
+                        if (b.Equals(Tisch[1].Name))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (string b in Tisch[1].Blockiert)
+                    {
+                        if (b.Equals(Tisch[0].Name))
+                        {
+                            return false;
+                        }
+                        if (b.Equals(Tisch[2].Name))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (string b in Tisch[2].Blockiert)
+                    {
+                        if (b.Equals(Tisch[1].Name))
+                        {
+                            return false;
+                        }
+                        if (b.Equals(Tisch[3].Name))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (string b in Tisch[3].Blockiert)
+                    {
+                        if (b.Equals(Tisch[2].Name))
+                        {
+                            return false;
+                        }
+                        if (b.Equals(Tisch[4].Name))
+                        {
+                            return false;
+                        }
+                    }
+                    foreach (string b in Tisch[4].Blockiert)
+                    {
+                        if (b.Equals(Tisch[3].Name))
+                        {
+                            return false;
+                        }
                     }
                 }
             }

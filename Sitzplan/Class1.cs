@@ -12,10 +12,10 @@ namespace Sitzplan
         {
             public Ergebnis(string P)
             {
-                Paar = P;
+                Tische = P;
                 
             }
-            public string Paar { get; set; }
+            public string Tische { get; set; }
            
         }
     }

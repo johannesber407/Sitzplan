@@ -32,16 +32,19 @@ namespace Sitzplan
         
         int AnzahlEingetrageneSchueler = 0;
         public List<TSitzplan.Schueler> Schueler = new List<TSitzplan.Schueler>();
-        private List<int> I = new List<int> { 10, 100, 1000, 100000, 1000000, 10000000, 100000000 };
+        private List<int> I = new List<int> { 10, 100, 1000, 100000, 1000000, 10000000 };
         List<TSitzplan.Schueler> W = new List<TSitzplan.Schueler>();
         TSitzplan sitzplan = new TSitzplan();
-        //public Enum BlockierteListe;
+        public List<List<string>> BlockierteListe = new List<List<string>>();
+        public List<TBlockierteKombination.BlockierteKombination> BlockierteKombinationen= new List<TBlockierteKombination.BlockierteKombination>();
         public List<List<TSitzplan.Schueler>> ErgebnisKombination = new List<List<TSitzplan.Schueler>>();
         // bool WuenscheWerdenNeuGeladen = false;
         public MainWindow()
         {
             InitializeComponent();
             DataGridKlassenliste.ItemsSource = Schueler;
+            DataGridBlockiert.ItemsSource = BlockierteKombinationen;
+            DataGridBlockiert.DisplayMemberPath = "Blockiert";
             ComboboxSchueler.ItemsSource = Schueler;
             ComboboxSchueler.DisplayMemberPath = "Name";
             Iterationen.ItemsSource = I;
@@ -60,10 +63,151 @@ namespace Sitzplan
 
         private void ButtonBerechnen_Click(object sender, RoutedEventArgs e)
         {
-            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
-            sitzplan.schueler = Schueler;
-            sitzplan.BerechneSitzplan(Schueler);
-            ZeigeErgebnisAn();
+            string Code = "Paar";
+            if (Paare.IsChecked == true)
+            {
+                Code = "Paar";
+            }
+            else if(ZweiDreiZwei.IsChecked == true)
+            {
+                Code = "ZweiDreiZwei";
+            }
+            else if (ZweiVierZwei.IsChecked == true)
+            {
+                Code = "ZweiVierZwei";
+            }
+            else if (VierVier.IsChecked == true)
+            {
+                Code = "VierVier";
+            }
+            else if(FuenfFunef.IsChecked == true)
+            {
+                Code = "FuenfFuenf";
+            }
+            string Code1 = "Normal";
+
+            if(trueRandom.IsChecked == true)
+            {
+                Code1 = "trueRandom";
+            }
+            else if(BlockiertRandom.IsChecked == true)
+            {
+                Code1 = "BlockiertRandom";
+            }
+            else if(Normal.IsChecked == true)
+            {
+                Code1 = "Normal";
+            }
+            switch (Code)
+            {
+                case "Paar":
+                    switch (Code1)
+                    {
+                        case "trueRandom":
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneTrueRandomSitzplan(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "BlockiertRandom":
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneBlockiertRandomSitzplan(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "Normal":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplan(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+
+                    }
+                    break;
+                case "ZweiDreiZwei":
+                    switch (Code1)
+                    {
+                        case "trueRandom":
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneTrueRandomSitzplanZweiDreiZwei(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "BlockiertRandom":
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneBlockiertRandomSitzplanZweiDreiZwei(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "Normal":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanZweiDreiZwei(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                    }
+                    break;
+                case "ZweiVierZwei":
+                    switch (Code1)
+                    {
+                        case "trueRandom":
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneTrueRandomSitzplanZweiVierZwei(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "BlockiertRandom":
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneBlockiertRandomSitzplanZweiVierZwei(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "Normal":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanZweiVierZwei(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                    }
+                    break;
+                case "VierVier":
+                    switch (Code1)
+                    {
+                        case "trueRandom":
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneTrueRandomSitzplanVierVier(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "BlockiertRandom":
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneBlockiertRandomSitzplanVierVier(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "Normal":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanVierVier(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                    }
+                    break;
+                case "FuenfFuenf":
+                    switch (Code1)
+                    {
+                        case "trueRandom":
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneTrueRandomSitzplanFuenfFuenf(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "BlockiertRandom":
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneBlockiertRandomSitzplanFuenfFuenf(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "Normal":
+                            
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanFuenfFuenf(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                    }
+                    break;
+            }
         }
 
         private void NeuerSchueler_Click(object sender, RoutedEventArgs e)
@@ -97,7 +241,6 @@ namespace Sitzplan
                 return;
             }
             AnzahlEingetrageneSchueler++;
-
             TSitzplan.Schueler eingetragenerSchueler = new TSitzplan.Schueler(AnzahlEingetrageneSchueler, Name, null, null, null, null, null, new List<string>());
             Schueler.Add(eingetragenerSchueler);
             SchuelerEingeben.Clear();
@@ -117,7 +260,7 @@ namespace Sitzplan
             }
             ComboboxSchueler.IsEnabled = true;
             ComboboxWunsch1.IsEnabled = false;
-       //     ComboboxWunsch1.SelectedIndex = ComboboxSchueler.SelectedIndex;
+       
             ComboboxWunsch2.IsEnabled = false;
             ComboboxWunsch3.IsEnabled = false;
             ComboboxWunsch4.IsEnabled = false;
@@ -130,12 +273,25 @@ namespace Sitzplan
 
         private void BlockierenEingeben_Click(object sender, RoutedEventArgs e)
         {
+            foreach(string s in Schueler[Blockieren1.SelectedIndex].Blockiert)
+            {
+                if (Schueler[Blockieren2.SelectedIndex].Name.Equals(s))
+                {
+                    System.Windows.MessageBox.Show("Diese Kombination wurde schon blockiert!");
+                    return;
+                }
+            }
             Schueler[Blockieren1.SelectedIndex].Blockiert.Add(Schueler[Blockieren2.SelectedIndex].Name);
             Schueler[Blockieren2.SelectedIndex].Blockiert.Add(Schueler[Blockieren1.SelectedIndex].Name);
-
+            
+            //BlockierteListe[Blockieren1.SelectedIndex].Add(Schueler[Blockieren2.SelectedIndex].Name);
+            //BlockierteListe[Blockieren2.SelectedIndex].Add(Schueler[Blockieren1.SelectedIndex].Name);
+            BlockierteKombinationen.Add(new TBlockierteKombination.BlockierteKombination(Schueler[Blockieren2.SelectedIndex].Name + " mit " + Schueler[Blockieren1.SelectedIndex].Name));
+            DataGridBlockiert.Items.Refresh();
             Blockieren1.SelectedIndex = ComboboxSchueler.SelectedIndex;
             Blockieren2.SelectedIndex = ComboboxSchueler.SelectedIndex;
             Blockieren2.IsEnabled = false;
+            BlockierenEingeben.IsEnabled = false;
         }
 
         private void ComboboxSchueler_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -143,10 +299,7 @@ namespace Sitzplan
             if(ComboboxSchueler.SelectedIndex != -1) 
             {
                 
-                    /*if(schuelers.Wunsch1 != null || schuelers.Wunsch2 != null || schuelers.Wunsch3 != null || schuelers.Wunsch4 != null || schuelers.Wunsch5 != null)
-                    {
-                        WuenscheWerdenNeuGeladen = true;
-                    }*/
+                    
                     if(Schueler[ComboboxSchueler.SelectedIndex].Wunsch1 != null || Schueler[ComboboxSchueler.SelectedIndex].Wunsch2 != null || Schueler[ComboboxSchueler.SelectedIndex].Wunsch3 != null || Schueler[ComboboxSchueler.SelectedIndex].Wunsch4 != null || Schueler[ComboboxSchueler.SelectedIndex].Wunsch5 != null)
                 {
                     String Wun= null;
@@ -160,19 +313,10 @@ namespace Sitzplan
                 }
                 
                
-                //EmptyComboboxes();
+                
                 
                 ComboboxWunsch1.IsEnabled = true;
-                //ManageComboBoxes();
-
-
-                /* foreach (TSitzplan.Schueler schueler in Schueler)
-                 {
-                     W1.Add(schueler);
-                 }
-                 TSitzplan.Schueler item = new TSitzplan.Schueler(Schueler[ComboboxSchueler.SelectedIndex].Nr, Schueler[ComboboxSchueler.SelectedIndex].Name, Schueler[ComboboxSchueler.SelectedIndex].Wunsch1, Schueler[ComboboxSchueler.SelectedIndex].Wunsch2, Schueler[ComboboxSchueler.SelectedIndex].Wunsch3, Schueler[ComboboxSchueler.SelectedIndex].Wunsch4, Schueler[ComboboxSchueler.SelectedIndex].Wunsch5);
-                 W1.Remove(item);
-                 //Schueler.Add(item);*/
+                
                 ManageComboBoxes();
                 ComboboxWunsch1.ItemsSource = W;
                 ComboboxWunsch1.DisplayMemberPath = "Name";
@@ -338,30 +482,7 @@ namespace Sitzplan
                 ComboboxWunsch5.SelectedIndex = ComboboxSchueler.SelectedIndex;
          //       WuenscheWerdenNeuGeladen = true;
          //   }
-          /* else
-            {
-                WuenscheNeuLaden();
-            }*/
-            /*if(Schueler[ComboboxSchueler.SelectedIndex].Wunsch1 == null)
-            {
-                ComboboxWunsch1.SelectedIndex = ComboboxSchueler.SelectedIndex;
-            }
-            if (Schueler[ComboboxSchueler.SelectedIndex].Wunsch2 == null)
-            {
-                ComboboxWunsch2.SelectedIndex = ComboboxSchueler.SelectedIndex;
-            }
-            if (Schueler[ComboboxSchueler.SelectedIndex].Wunsch3 == null)
-            {
-                ComboboxWunsch3.SelectedIndex = ComboboxSchueler.SelectedIndex;
-            }
-            if (Schueler[ComboboxSchueler.SelectedIndex].Wunsch4 == null)
-            {
-                ComboboxWunsch4.SelectedIndex = ComboboxSchueler.SelectedIndex;
-            }
-            if (Schueler[ComboboxSchueler.SelectedIndex].Wunsch5 == null)
-            {
-                ComboboxWunsch5.SelectedIndex = ComboboxSchueler.SelectedIndex;
-            }*/
+          
 
         }
      /*   private void WuenscheNeuLaden()
@@ -595,6 +716,26 @@ namespace Sitzplan
                 SchuelerEingeben.Clear();
                 UpdateTabelle();
                 UpdateComboBoxesWuensche();
+                if(schueler.Blockiert.Count != 0)
+                {
+                    foreach(string BlockierterPartner in schueler.Blockiert)
+                    {
+                        bool skip = false;
+                        foreach (TBlockierteKombination.BlockierteKombination blockierteKombination in BlockierteKombinationen)
+                        {
+                            if ((blockierteKombination.Blockiert).Equals(BlockierterPartner + " mit " + schueler.Name))
+                            {
+                                skip = true;
+                            }
+                        }
+                        if (!skip)
+                        {
+                            BlockierteKombinationen.Add(new TBlockierteKombination.BlockierteKombination(schueler.Name + " mit " + BlockierterPartner));
+                        }
+                        
+                    }
+                    DataGridBlockiert.Items.Refresh();
+                }
             }
             AnzahlEingetrageneSchueler = Schueler.Count();
         }
@@ -624,6 +765,26 @@ namespace Sitzplan
                 window.SchuelerEingeben.Clear();
                 window.UpdateTabelle();
                 window.UpdateComboBoxesWuensche();
+                if (schueler.Blockiert.Count != 0)
+                {
+                    foreach (string BlockierterPartner in schueler.Blockiert)
+                    {
+                        bool skip = false;
+                        foreach (TBlockierteKombination.BlockierteKombination blockierteKombination in window.BlockierteKombinationen)
+                        {
+                            if ((blockierteKombination.Blockiert).Equals(BlockierterPartner + " mit " + schueler.Name))
+                            {
+                                skip = true;
+                            }
+                        }
+                        if (!skip)
+                        {
+                            window.BlockierteKombinationen.Add(new TBlockierteKombination.BlockierteKombination(schueler.Name + " mit " + BlockierterPartner));
+                        }
+
+                    }
+                    window.DataGridBlockiert.Items.Refresh();
+                }
             }
             window.AnzahlEingetrageneSchueler = window.Schueler.Count();
         }
@@ -682,20 +843,66 @@ namespace Sitzplan
         private void ZeigeErgebnisAn()
         {
             List<string> Ergebnis = new List<string>();
-           // string test = "hallo";
+           
             ErgebnisKombination = sitzplan.ErgebnisKombination;
             foreach(List<TSitzplan.Schueler> schuelers in ErgebnisKombination)
             {
-                Ergebnis.Add(schuelers[0].Name + ", " + schuelers[1].Name);
+                if(schuelers.Count == 2)
+                {
+                    Ergebnis.Add(schuelers[0].Name + ", " + schuelers[1].Name);
+                }
+                if (schuelers.Count == 3)
+                {
+                    Ergebnis.Add(schuelers[0].Name + ", " + schuelers[1].Name + ", " + schuelers[2].Name);
+                }
+                if (schuelers.Count == 4)
+                {
+                    Ergebnis.Add(schuelers[0].Name + ", " + schuelers[1].Name + ", " + schuelers[2].Name + ", " + schuelers[3].Name);
+                }
+                if (schuelers.Count == 5)
+                {
+                    Ergebnis.Add(schuelers[0].Name + ", " + schuelers[1].Name + ", " + schuelers[2].Name + ", " + schuelers[3].Name + ", " +  schuelers[4].Name);
+                }
             }
             List<TErgebnis.Ergebnis> Endergebnis = new List<TErgebnis.Ergebnis>();
-            foreach(string Paar in Ergebnis)
+            foreach(string Tisch in Ergebnis)
             {
-                TErgebnis.Ergebnis ergebnis = new TErgebnis.Ergebnis(Paar);
+                TErgebnis.Ergebnis ergebnis = new TErgebnis.Ergebnis(Tisch);
                 Endergebnis.Add(ergebnis);
             }
             DataGridErgebnis.ItemsSource = Endergebnis;
             DataGridErgebnis.DisplayMemberPath = "Paar";
+            sitzplan.Bewertung = 0;
+        }
+
+        private void AlleBlockierungenLoeschen_Click(object sender, RoutedEventArgs e)
+        {
+            for(int i = 0; i < Schueler.Count; i++)
+            {
+                Schueler[i].Blockiert.RemoveRange(0, Schueler[i].Blockiert.Count);
+            }
+            BlockierteKombinationen.RemoveRange(0, BlockierteKombinationen.Count());
+            DataGridBlockiert.Items.Refresh();
+        }
+
+        private void trueRandom_Click(object sender, RoutedEventArgs e)
+        {
+            Iterationen.IsEnabled = false;
+        }
+
+        private void BlockiertRandom_Click(object sender, RoutedEventArgs e)
+        {
+            Iterationen.IsEnabled = false;
+        }
+
+        private void Normal_Click(object sender, RoutedEventArgs e)
+        {
+            Iterationen.IsEnabled = true;
+        }
+
+        private void Blockieren2_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            BlockierenEingeben.IsEnabled = true;
         }
     }
 }
