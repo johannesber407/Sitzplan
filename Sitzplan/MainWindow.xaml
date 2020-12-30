@@ -92,11 +92,14 @@
                                 <ComboBox  Name="Blockieren2" Width="180" ItemsSource="{Binding Schueler}" IsEnabled="false" SelectionChanged="Blockieren2_SelectionChanged"></ComboBox>
                                 <Button Name="BlockierenEingeben" Content="Eingeben" Width="100" Click="BlockierenEingeben_Click" Margin="10" IsEnabled="False"/>
                                 <Button Name="AlleBlockierungenLoeschen" Content="Alle Blockierungen Löschen" Click="AlleBlockierungenLoeschen_Click" Margin="10" Width="160"/>
-                                <DataGrid x:Name="DataGridBlockiert" IsReadOnly="True" AutoGenerateColumns="True">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
+                                <StackPanel Orientation="Vertical">
+                                    <DataGrid x:Name="DataGridBlockiert" IsReadOnly="True" AutoGenerateColumns="True">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                                
                             </StackPanel>
                         </GroupBox>
                     </StackPanel>
@@ -123,14 +126,26 @@
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
+                        <StackPanel Name="ProgressBar1" Opacity="0">
+                            <TextBlock HorizontalAlignment = "Center" Margin = "10" Text = "Der Sitzplan wird berechnet" />
+                            <ProgressBar x:Name = "pg1" Value = "0" Margin = "10" Maximum = "200" Height = "15" IsIndeterminate = "False" />
+                        </StackPanel>
                     </StackPanel>
                     
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         
-                        <Button Name="ButtonBerechnen" Content="_Berechnen" Click="ButtonBerechnen_Click" Margin="10"/>
-                        <Button Name="ButtonBeenden" Content="B_eenden" Click="ButtonBeenden_Click" Margin="10"/>
-                        <Label VerticalAlignment="Center">Iterationen:</Label>
-                        <ComboBox Name="Iterationen"  Width="180" Margin="10" ItemsSource="{Binding I}" SelectedIndex="4"/>
+                        <Button Name="ButtonBerechnen" Content="_Berechnen" Click="ButtonBerechnen_Click" Margin="10"  VerticalAlignment="Top"/>
+                        <Button Name="ButtonBeenden" Content="B_eenden" Click="ButtonBeenden_Click" Margin="10" VerticalAlignment="Top"/>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <Label VerticalAlignment="Center" Cursor="Help" >Iterationen:</Label>
+                                <ComboBox Name="Iterationen"  Width="180" Margin="10" ItemsSource="{Binding I}" SelectedIndex="5" />
+                            </StackPanel>
+                            <Label >Je mehr Iterationen das Programm durchläuft, desto besser werden die Ergebnisse. </Label>
+                            <Label>1 000 000 Iterationen benötigen ca. 30s, 10 000 000 benötigen über 5min.</Label>
+                            <Label>Alles unter 1 000 000 Iterationen benötigt nur wenige Sekunden.</Label>
+                        </StackPanel>
+                        
                         <StackPanel Orientation="Vertical" >
                             <RadioButton GroupName="IterationenRadio" Name="trueRandom" Content="Zufällige Kombination (Beachtet Blockierungen nicht(!))" Click="trueRandom_Click"/>
                             <RadioButton GroupName="IterationenRadio" Name="BlockiertRandom" Content="Zufällige Kombination (Beachtet Blockierungen)" Click="BlockiertRandom_Click"/>

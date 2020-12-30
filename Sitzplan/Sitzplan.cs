@@ -12,6 +12,7 @@ namespace Sitzplan
 {
     public class TSitzplan
     {
+        
         public List<TSitzplan.Schueler> schueler;
         public int Bewertung = 0;/// muss 0 sein!
         [Serializable]
@@ -48,8 +49,12 @@ namespace Sitzplan
         public string safe;
         public IFormatter formatter = new BinaryFormatter();
         public int Iterationen;
-
-
+        public Window1 window1 = new Window1();
+        //MainWindow mainwindow = new MainWindow();
+        public TSitzplan()
+        {
+            window1.Hide();
+        }
         public void BelegeKlassenlisteName(String Name)
         {
 
@@ -493,6 +498,8 @@ namespace Sitzplan
 
         public void BerechneSitzplanZweiVierZwei(List<Schueler> temp)
         {
+            
+            showProgressBar();
             int t = 8 - (temp.Count() % 8);
 
             if (temp.Count() % 8 != 0)
@@ -506,6 +513,8 @@ namespace Sitzplan
             int Reihen = schueler.Count() / 8;
             for (int i = 0; i < Iterationen; i++)
             {
+                //window1.Progress = i;
+                updateProgressBar(i);
                 EineKombination = new List<List<Schueler>>();
                 List<Schueler> Namen = new List<Schueler>();
                 foreach (Schueler schueler1 in schueler)
@@ -548,6 +557,7 @@ namespace Sitzplan
                 }
 
             }
+            window1.Hide();
         }
 
         public void BerechneTrueRandomSitzplanVierVier(List<Schueler> temp)
@@ -1324,7 +1334,19 @@ namespace Sitzplan
                 }
             }
             return true;
-        }   
+        }
+        private void showProgressBar()
+        {
+            window1.Show();
+           /* window1.Iterationen = Iterationen;
+            window1.Progress = 0;
+            window1.InitializeProgessBar();*/
+        }
+        private void updateProgressBar(int i)
+        {
+           /* window1.Progress = i;
+            window1.updateProgressBar();*/
+        }
     }
     
 }

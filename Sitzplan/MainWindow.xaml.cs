@@ -32,15 +32,17 @@ namespace Sitzplan
         
         int AnzahlEingetrageneSchueler = 0;
         public List<TSitzplan.Schueler> Schueler = new List<TSitzplan.Schueler>();
-        private List<int> I = new List<int> { 10, 100, 1000, 100000, 1000000, 10000000 };
+        private List<int> I = new List<int> { 10, 100, 1000, 10000,  100000, 500000, 1000000, 10000000 };
         List<TSitzplan.Schueler> W = new List<TSitzplan.Schueler>();
         TSitzplan sitzplan = new TSitzplan();
         public List<List<string>> BlockierteListe = new List<List<string>>();
         public List<TBlockierteKombination.BlockierteKombination> BlockierteKombinationen= new List<TBlockierteKombination.BlockierteKombination>();
         public List<List<TSitzplan.Schueler>> ErgebnisKombination = new List<List<TSitzplan.Schueler>>();
+        
         // bool WuenscheWerdenNeuGeladen = false;
         public MainWindow()
         {
+            
             InitializeComponent();
             DataGridKlassenliste.ItemsSource = Schueler;
             DataGridBlockiert.ItemsSource = BlockierteKombinationen;
@@ -51,7 +53,8 @@ namespace Sitzplan
             Blockieren1.ItemsSource = Schueler;
             Blockieren1.DisplayMemberPath = "Name";
             
-         //   DataGridErgebnis.ItemsSource
+
+            //   DataGridErgebnis.ItemsSource
 
 
         }
@@ -63,6 +66,8 @@ namespace Sitzplan
 
         private void ButtonBerechnen_Click(object sender, RoutedEventArgs e)
         {
+            sitzplan.window1.Show();
+            System.Threading.Thread.Sleep(100);
             string Code = "Paar";
             if (Paare.IsChecked == true)
             {
@@ -157,6 +162,7 @@ namespace Sitzplan
                             ZeigeErgebnisAn();
                             break;
                         case "Normal":
+                            sitzplan.window1.Show();
                             sitzplan.Iterationen = I[Iterationen.SelectedIndex];
                             sitzplan.schueler = Schueler;
                             sitzplan.BerechneSitzplanZweiVierZwei(Schueler);
@@ -903,6 +909,14 @@ namespace Sitzplan
         private void Blockieren2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             BlockierenEingeben.IsEnabled = true;
+        }
+        public void showProgressBar()
+        {
+            ProgressBar1.Opacity = 1;
+        }
+        public void updateProgressBar(int i)
+        {
+
         }
     }
 }
