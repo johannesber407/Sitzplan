@@ -545,13 +545,17 @@ namespace Sitzplan
 
         
 
+
         private void ComboboxWunsch2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ComboboxWunsch2.SelectedIndex != -1)
             {
 
-                
-                ComboboxWunsch3.IsEnabled = true;
+
+                if (W[ComboboxWunsch2.SelectedIndex].Name != null)
+                {
+                    ComboboxWunsch3.IsEnabled = true;
+                }
 
                 String Wun1 = W[ComboboxWunsch2.SelectedIndex].Name;
                 TSitzplan.Schueler temp = Schueler[ComboboxSchueler.SelectedIndex];
@@ -587,9 +591,12 @@ namespace Sitzplan
         {
             if (ComboboxWunsch3.SelectedIndex != -1)
             {
-                
-               
-                ComboboxWunsch4.IsEnabled = true;
+
+
+                if (W[ComboboxWunsch3.SelectedIndex].Name != null)
+                {
+                    ComboboxWunsch4.IsEnabled = true;
+                }
 
                 String Wun1 = W[ComboboxWunsch3.SelectedIndex].Name;
                 TSitzplan.Schueler temp = Schueler[ComboboxSchueler.SelectedIndex];
@@ -624,9 +631,12 @@ namespace Sitzplan
         {
             if (ComboboxWunsch4.SelectedIndex != -1)
             {
-                
-                
-                ComboboxWunsch5.IsEnabled = true;
+
+
+                if (W[ComboboxWunsch4.SelectedIndex].Name != null)
+                {
+                    ComboboxWunsch5.IsEnabled = true;
+                }
 
                 String Wun1 = W[ComboboxWunsch4.SelectedIndex].Name;
                 TSitzplan.Schueler temp = Schueler[ComboboxSchueler.SelectedIndex];
@@ -682,12 +692,15 @@ namespace Sitzplan
             saveFileDialog1.FilterIndex = 2;
             saveFileDialog1.RestoreDirectory = true;
             saveFileDialog1.ShowDialog();
-            
-            
-            FileStream writerFileStream = new FileStream(saveFileDialog1.FileName, FileMode.Create, FileAccess.Write);
-            
-            sitzplan.formatter.Serialize(writerFileStream, Schueler);
-            writerFileStream.Close();
+
+            try
+            {
+                FileStream writerFileStream = new FileStream(saveFileDialog1.FileName, FileMode.Create, FileAccess.Write);
+
+                sitzplan.formatter.Serialize(writerFileStream, Schueler);
+                writerFileStream.Close();
+            }
+            catch { }
 
         }
 
