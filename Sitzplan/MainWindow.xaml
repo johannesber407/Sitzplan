@@ -54,7 +54,10 @@
                                         </ComboBox>
                                     </StackPanel>
                                     <StackPanel Orientation="Vertical">
-                                        <Button  VerticalAlignment="Bottom" Name="WuenscheNaechsterSchueler" Width="100" Content="Nächster Schüler" Click="WuenscheNaechsterSchueler_Click"/>
+                                        
+                                        <Button  VerticalAlignment="Bottom" Name="WuenscheNaechsterSchueler" Width="100" Content="Nächster Schüler" Click="WuenscheNaechsterSchueler_Click" IsEnabled="False"/>
+
+                                        <Button Margin="10" Width="100" Name="SchuelerLoeschen" Click="SchuelerLoeschen_Click" IsEnabled="False">Schüler löschen</Button>
                                     </StackPanel>
                                     
                                 </StackPanel>
@@ -142,7 +145,7 @@
                 </StackPanel>
                 
             </StackPanel>
-           
+            <Label HorizontalAlignment="Right">Johannes Bertsch</Label>
         </StackPanel>
     </Grid>
 </Window>

@@ -267,8 +267,9 @@ namespace Sitzplan
             ComboboxWunsch5.IsEnabled = false;
             UpdateComboBoxesWuensche();
             EmptyComboboxes();
-            
-            
+            WuenscheNaechsterSchueler.IsEnabled = false;
+            SchuelerLoeschen.IsEnabled = false;
+
         }
 
         private void BlockierenEingeben_Click(object sender, RoutedEventArgs e)
@@ -332,6 +333,8 @@ namespace Sitzplan
                         }
                     }
                 }*/
+                WuenscheNaechsterSchueler.IsEnabled = true;
+                SchuelerLoeschen.IsEnabled = true;
             }
         }
         private void ManageComboBoxes()
@@ -903,6 +906,104 @@ namespace Sitzplan
         private void Blockieren2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             BlockierenEingeben.IsEnabled = true;
+        }
+
+        private void SchuelerLoeschen_Click(object sender, RoutedEventArgs e)
+        {
+            AnzahlEingetrageneSchueler--;
+            DeleteDeleatedSchueler(Schueler[ComboboxSchueler.SelectedIndex].Name);
+            DeleteDeleatedSchuelerBlockierung(Schueler[ComboboxSchueler.SelectedIndex].Name);
+            Schueler.RemoveAt(ComboboxSchueler.SelectedIndex);
+            FixSchuelerNummer();
+            UpdateTabelle();
+            
+            WuenscheNaechsterSchueler_Click(null, new RoutedEventArgs());
+            
+        }
+        private void DeleteDeleatedSchueler(String s)
+        {
+            for(int i = 0; i < Schueler.Count(); i++)
+            {
+                if (Schueler[i].Wunsch1 == s)
+                {
+                    TSitzplan.Schueler temp = Schueler[i];
+                    temp.Wunsch1 = null;
+                    Schueler[i] = temp;
+                }
+            }
+            for (int i = 0; i < Schueler.Count(); i++)
+            {
+                if (Schueler[i].Wunsch2 == s)
+                {
+                    TSitzplan.Schueler temp = Schueler[i];
+                    temp.Wunsch2 = null;
+                    Schueler[i] = temp;
+                }
+            }
+            for (int i = 0; i < Schueler.Count(); i++)
+            {
+                if (Schueler[i].Wunsch3 == s)
+                {
+                    TSitzplan.Schueler temp = Schueler[i];
+                    temp.Wunsch3 = null;
+                    Schueler[i] = temp;
+                }
+            }
+            for (int i = 0; i < Schueler.Count(); i++)
+            {
+                if (Schueler[i].Wunsch4 == s)
+                {
+                    TSitzplan.Schueler temp = Schueler[i];
+                    temp.Wunsch4 = null;
+                    Schueler[i] = temp;
+                }
+            }
+            for (int i = 0; i < Schueler.Count(); i++)
+            {
+                if (Schueler[i].Wunsch5 == s)
+                {
+                    TSitzplan.Schueler temp = Schueler[i];
+                    temp.Wunsch5 = null;
+                    Schueler[i] = temp;
+                }
+            }
+        }
+        private void FixSchuelerNummer()
+        {
+            for (int i = 0; i < Schueler.Count; i++)
+            {
+                TSitzplan.Schueler temp = Schueler[i];
+                temp.Nr = i + 1;
+                Schueler[i] = temp;
+            }
+        }
+        private void DeleteDeleatedSchuelerBlockierung(String s)
+        {
+            for (int i = 0; i < Schueler.Count; i++)
+            {
+                for (int j = 0; j < Schueler[i].Blockiert.Count(); j++)
+                {
+                    if (Schueler[i].Blockiert[j] == s)
+                    {
+                        Schueler[i].Blockiert.RemoveAt(j);
+                    }
+                }
+
+                for (int k = 0; k < BlockierteKombinationen.Count(); k++)
+                {
+                    if ((BlockierteKombinationen[k].Blockiert).Equals(s + " mit " + Schueler[i].Name) || (BlockierteKombinationen[k].Blockiert).Equals(Schueler[i].Name + " mit " + s))
+                    {
+                        BlockierteKombinationen.RemoveAt(k);
+                    }
+                }
+            }
+            foreach(TBlockierteKombination.BlockierteKombination blockierteKombination in BlockierteKombinationen)
+            {
+
+            }
+            DataGridBlockiert.Items.Refresh();
+
+            
         }
     }
 }
