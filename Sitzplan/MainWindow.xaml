@@ -42,108 +42,152 @@
                         
                     </StackPanel>
                 </GroupBox>
-                <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
-                <GroupBox Header="Wünsche" Margin="10">
-                    <StackPanel Orientation="Horizontal" Margin="10" >
-                                <StackPanel Orientation="Vertical">
-                                    <StackPanel Orientation="Horizontal">
-                                    <Label Margin="10">Schüler:</Label>
-                                        <ComboBox Name="ComboboxSchueler" Margin="10" Width="180" Height="25" VerticalAlignment="Top" SelectionChanged="ComboboxSchueler_SelectionChanged" ItemsSource="{Binding Schueler}" >
-                                            
-                                        </ComboBox>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <GroupBox Header="Wünsche" Margin="10">
+                                <StackPanel Orientation="Horizontal" Margin="10" >
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Margin="10">Schüler:</Label>
+                                            <ComboBox Name="ComboboxSchueler" Margin="10" Width="180" Height="25" VerticalAlignment="Top" SelectionChanged="ComboboxSchueler_SelectionChanged" ItemsSource="{Binding Schueler}" >
+
+                                            </ComboBox>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical">
+
+                                            <Button  VerticalAlignment="Bottom" Name="WuenscheNaechsterSchueler" Width="100" Content="Nächster Schüler" Click="WuenscheNaechsterSchueler_Click" IsEnabled="False"/>
+
+                                            <Button Margin="10" Width="100" Name="SchuelerLoeschen" Click="SchuelerLoeschen_Click" IsEnabled="False">Schüler löschen</Button>
+                                        </StackPanel>
+
                                     </StackPanel>
                                     <StackPanel Orientation="Vertical">
-                                        
-                                        <Button  VerticalAlignment="Bottom" Name="WuenscheNaechsterSchueler" Width="100" Content="Nächster Schüler" Click="WuenscheNaechsterSchueler_Click" IsEnabled="False"/>
-
-                                        <Button Margin="10" Width="100" Name="SchuelerLoeschen" Click="SchuelerLoeschen_Click" IsEnabled="False">Schüler löschen</Button>
-                                    </StackPanel>
-                                    
-                                </StackPanel>
-                                <StackPanel Orientation="Vertical">
-                                    <StackPanel Orientation="Horizontal">
-                                    <Label Margin="10">Wunsch 1:</Label>
-                                    <ComboBox Name="ComboboxWunsch1" Margin="10" Width="180" IsEnabled="False" ItemsSource="{Binding Schueler}" SelectionChanged="ComboboxWunsch1_SelectionChanged" ></ComboBox>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Label Margin="10">Wunsch 2:</Label>
-                                        <ComboBox Name="ComboboxWunsch2" Margin="10" Width="180" IsEnabled="False" ItemsSource="{Binding Schueler}" SelectionChanged="ComboboxWunsch2_SelectionChanged"></ComboBox>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Label Margin="10">Wunsch 3:</Label>
-                                        <ComboBox Name="ComboboxWunsch3" Margin="10" Width="180" IsEnabled="False" ItemsSource="{Binding Schueler}" SelectionChanged="ComboboxWunsch3_SelectionChanged"></ComboBox>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Label Margin="10">Wunsch 4:</Label>
-                                        <ComboBox Name="ComboboxWunsch4" Margin="10" Width="180" IsEnabled="False" ItemsSource="{Binding Schueler}" SelectionChanged="ComboboxWunsch4_SelectionChanged"></ComboBox>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Label Margin="10">Wunsch 5:</Label>
-                                        <ComboBox Name="ComboboxWunsch5" Margin="10" Width="180" IsEnabled="False" ItemsSource="{Binding Schueler}" SelectionChanged="ComboboxWunsch5_SelectionChanged"></ComboBox>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Margin="10">Wunsch 1:</Label>
+                                            <ComboBox Name="ComboboxWunsch1" Margin="10" Width="180" IsEnabled="False" ItemsSource="{Binding Schueler}" SelectionChanged="ComboboxWunsch1_SelectionChanged" ></ComboBox>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Margin="10">Wunsch 2:</Label>
+                                            <ComboBox Name="ComboboxWunsch2" Margin="10" Width="180" IsEnabled="False" ItemsSource="{Binding Schueler}" SelectionChanged="ComboboxWunsch2_SelectionChanged"></ComboBox>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Margin="10">Wunsch 3:</Label>
+                                            <ComboBox Name="ComboboxWunsch3" Margin="10" Width="180" IsEnabled="False" ItemsSource="{Binding Schueler}" SelectionChanged="ComboboxWunsch3_SelectionChanged"></ComboBox>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Margin="10">Wunsch 4:</Label>
+                                            <ComboBox Name="ComboboxWunsch4" Margin="10" Width="180" IsEnabled="False" ItemsSource="{Binding Schueler}" SelectionChanged="ComboboxWunsch4_SelectionChanged"></ComboBox>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Margin="10">Wunsch 5:</Label>
+                                            <ComboBox Name="ComboboxWunsch5" Margin="10" Width="180" IsEnabled="False" ItemsSource="{Binding Schueler}" SelectionChanged="ComboboxWunsch5_SelectionChanged"></ComboBox>
+                                        </StackPanel>
                                     </StackPanel>
                                 </StackPanel>
-                    </StackPanel>
-                </GroupBox>
-
-
-                        <GroupBox Header="Blockieren" Margin="10">
-                            <StackPanel Orientation="Vertical">
-                                <Label HorizontalAlignment="Center">Diese Kombination soll verboten werden:</Label>
-                                <ComboBox Name="Blockieren1" Width="180" ItemsSource="{Binding Schueler}" SelectionChanged="Blockieren1_SelectionChanged"></ComboBox>
-                                <Label HorizontalAlignment="Center">mit</Label>
-                                <ComboBox  Name="Blockieren2" Width="180" ItemsSource="{Binding Schueler}" IsEnabled="false" SelectionChanged="Blockieren2_SelectionChanged"></ComboBox>
-                                <Button Name="BlockierenEingeben" Content="Eingeben" Width="100" Click="BlockierenEingeben_Click" Margin="10" IsEnabled="False"/>
-                                <Button Name="AlleBlockierungenLoeschen" Content="Alle Blockierungen Löschen" Click="AlleBlockierungenLoeschen_Click" Margin="10" Width="160"/>
-                                <DataGrid x:Name="DataGridBlockiert" IsReadOnly="True" AutoGenerateColumns="True">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </StackPanel>
-                        </GroupBox>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel Orientation="Vertical">
-                            <GroupBox Header="Sitzplan" Margin="10">
-                                <DataGrid x:Name="DataGridErgebnis"  AutoGenerateColumns="True" IsReadOnly="True" >
-                                    <DataGrid.Columns>
-
-
-                                    </DataGrid.Columns>
-
-                                </DataGrid>
                             </GroupBox>
+
+
+
                         </StackPanel>
-                        <StackPanel Orientation="Vertical">
-                            <GroupBox Header="Art der Sitzordnung" Margin="10">
-                                <StackPanel Orientation="Vertical">
-                                    <RadioButton GroupName="ArtDerSitzOrdnung" Content="2er Paare" Name="Paare" IsChecked="True"/>
-                                    <RadioButton GroupName="ArtDerSitzOrdnung" Content="2 3 2" Name="ZweiDreiZwei"/>
-                                    <RadioButton GroupName="ArtDerSitzOrdnung" Content="2 4 2" Name="ZweiVierZwei"/>
-                                    <RadioButton GroupName="ArtDerSitzOrdnung" Content="4 4" Name="VierVier"/>
-                                    <RadioButton GroupName="ArtDerSitzOrdnung" Content="5 5" Name="FuenfFunef"/>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical">
+                                <GroupBox Header="Sitzplan" Margin="10">
+                                    <DataGrid x:Name="DataGridErgebnis"  AutoGenerateColumns="True" IsReadOnly="True" >
+                                        <DataGrid.Columns>
+
+
+                                        </DataGrid.Columns>
+
+                                    </DataGrid>
+                                </GroupBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical">
+                                <GroupBox Header="Art der Sitzordnung" Margin="10">
+                                    <StackPanel Orientation="Vertical">
+                                        <RadioButton GroupName="ArtDerSitzOrdnung" Content="2er Paare" Name="Paare" IsChecked="True"/>
+                                        <RadioButton GroupName="ArtDerSitzOrdnung" Content="2 3 2" Name="ZweiDreiZwei"/>
+                                        <RadioButton GroupName="ArtDerSitzOrdnung" Content="2 4 2" Name="ZweiVierZwei"/>
+                                        <RadioButton GroupName="ArtDerSitzOrdnung" Content="4 4" Name="VierVier"/>
+                                        <RadioButton GroupName="ArtDerSitzOrdnung" Content="5 5" Name="FuenfFunef"/>
+                                    </StackPanel>
+                                </GroupBox>
+                            </StackPanel>
                                 </StackPanel>
-                            </GroupBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <GroupBox Header="Blockieren" Margin="10">
+                                        <StackPanel Orientation="Vertical">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label>Blockierung beachten</Label>
+                                                <CheckBox Name="BlockierungBeachten" IsChecked="True" Margin="7" Click="BlockierungBeachten_Click"></CheckBox>
+
+                                            </StackPanel>
+                                            <Label HorizontalAlignment="Center">Diese Kombination soll verboten werden:</Label>
+                                            
+                                            <ComboBox Name="Blockieren1" Width="180" ItemsSource="{Binding Schueler}" SelectionChanged="Blockieren1_SelectionChanged"></ComboBox>
+                                            <Label HorizontalAlignment="Center">mit</Label>
+                                            <ComboBox  Name="Blockieren2" Width="180" ItemsSource="{Binding Schueler}" IsEnabled="false" SelectionChanged="Blockieren2_SelectionChanged"></ComboBox>
+                                            <Button Name="BlockierenEingeben" Content="Eingeben" Width="100" Click="BlockierenEingeben_Click" Margin="10" IsEnabled="False"/>
+                                            <Button Name="AlleBlockierungenLoeschen" Content="Alle Blockierungen löschen" Click="AlleBlockierungenLoeschen_Click" Margin="10" Width="160"/>
+                                            <DataGrid x:Name="DataGridBlockiert" IsReadOnly="True" AutoGenerateColumns="True">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </StackPanel>
+                                    </GroupBox>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <GroupBox Header="Sitznachbarn erzwingen" Margin="10">
+                                        <StackPanel Orientation="Vertical">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label>Sitznachbarn beachten</Label>
+                                                <CheckBox Name="SitznachbarnBeachten" IsChecked="False" Margin="7" Click="SitznachbarnBeachten_Click"></CheckBox>
+
+                                            </StackPanel>
+                                            
+                                            <Label HorizontalAlignment="Center">Diese Schüler sollen nebeneinander sitzen:</Label>
+                                            <ComboBox Name="Sitznachbar1" Width="180" ItemsSource="{Binding Schueler}" SelectionChanged="Sitznachbar1_SelectionChanged" IsEnabled="False"></ComboBox>
+                                            <Label HorizontalAlignment="Center">mit</Label>
+                                            <ComboBox  Name="Sitznachbar2" Width="180" ItemsSource="{Binding Schueler}" IsEnabled="false" SelectionChanged="Sitznachbar2_SelectionChanged"></ComboBox>
+                                            <Button Name="SitznachbarnEingeben" Content="Eingeben" Width="100" Click="SitznachbarnEingeben_Click"  Margin="10" IsEnabled="False"/>
+                                            <Button Name="AlleSitznachbarnLoeschen" Content="Alle Sitznachbarn löschen" Click="AlleSitznachbarnLoeschen_Click" IsEnabled="False" Margin="10" Width="160"/>
+                                            <DataGrid x:Name="DataGridSitznachbarn" IsReadOnly="True" AutoGenerateColumns="True" IsEnabled="False">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                            <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0" >
+                                                <Label>Gewichtung:</Label>
+                                                <ComboBox Name="ComboBoxGewichtung" SelectedIndex="3" IsEnabled="False"></ComboBox>
+
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </GroupBox>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+                            <Button Name="ButtonBerechnen" Content="_Berechnen" Click="ButtonBerechnen_Click" Margin="10"/>
+                            <Button Name="ButtonBeenden" Content="B_eenden" Click="ButtonBeenden_Click" Margin="10"/>
+                            <Label VerticalAlignment="Center">Iterationen:</Label>
+                            <ComboBox Name="Iterationen"  Width="180" Margin="10" ItemsSource="{Binding I}" SelectedIndex="4"/>
+                            <StackPanel Orientation="Vertical" >
+                                <RadioButton GroupName="IterationenRadio" Name="trueRandom" Content="Zufällige Kombination" Click="trueRandom_Click"/>
+                                <RadioButton GroupName="IterationenRadio" Name="Normal" Content="Bestmögliche Kombination" IsChecked="True" Click="Normal_Click"/>
+                            </StackPanel>
+
+
                         </StackPanel>
                     </StackPanel>
                     
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        
-                        <Button Name="ButtonBerechnen" Content="_Berechnen" Click="ButtonBerechnen_Click" Margin="10"/>
-                        <Button Name="ButtonBeenden" Content="B_eenden" Click="ButtonBeenden_Click" Margin="10"/>
-                        <Label VerticalAlignment="Center">Iterationen:</Label>
-                        <ComboBox Name="Iterationen"  Width="180" Margin="10" ItemsSource="{Binding I}" SelectedIndex="4"/>
-                        <StackPanel Orientation="Vertical" >
-                            <RadioButton GroupName="IterationenRadio" Name="trueRandom" Content="Zufällige Kombination (Beachtet Blockierungen nicht(!))" Click="trueRandom_Click"/>
-                            <RadioButton GroupName="IterationenRadio" Name="BlockiertRandom" Content="Zufällige Kombination (Beachtet Blockierungen)" Click="BlockiertRandom_Click"/>
-                            <RadioButton GroupName="IterationenRadio" Name="Normal" Content="Bestmögliche Kombination" IsChecked="True" Click="Normal_Click"/>
-                        </StackPanel>
-                        
-
-                    </StackPanel>
                 </StackPanel>
-                
             </StackPanel>
             <Label HorizontalAlignment="Right">Johannes Bertsch</Label>
         </StackPanel>

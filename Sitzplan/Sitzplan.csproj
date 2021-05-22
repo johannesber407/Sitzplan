@@ -58,6 +58,7 @@
     </ApplicationDefinition>
     <Compile Include="Class1.cs" />
     <Compile Include="Class2.cs" />
+    <Compile Include="Sitznachbar.cs" />
     <Compile Include="Sitzplan.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

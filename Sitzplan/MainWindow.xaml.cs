@@ -33,10 +33,13 @@ namespace Sitzplan
         int AnzahlEingetrageneSchueler = 0;
         public List<TSitzplan.Schueler> Schueler = new List<TSitzplan.Schueler>();
         private List<int> I = new List<int> { 10, 100, 1000, 100000, 1000000, 10000000 };
+        private List<int> J = new List<int> { 2, 3, 4, 5, 6, 7, 10, 15, 20};
         List<TSitzplan.Schueler> W = new List<TSitzplan.Schueler>();
         TSitzplan sitzplan = new TSitzplan();
         public List<List<string>> BlockierteListe = new List<List<string>>();
         public List<TBlockierteKombination.BlockierteKombination> BlockierteKombinationen= new List<TBlockierteKombination.BlockierteKombination>();
+        public List<List<string>> SitznachbarnListe = new List<List<string>>();
+        public List<TSitznachbar.Sitznachbarn> Sitznachbarn = new List<TSitznachbar.Sitznachbarn>();
         public List<List<TSitzplan.Schueler>> ErgebnisKombination = new List<List<TSitzplan.Schueler>>();
         // bool WuenscheWerdenNeuGeladen = false;
         public MainWindow()
@@ -45,13 +48,17 @@ namespace Sitzplan
             DataGridKlassenliste.ItemsSource = Schueler;
             DataGridBlockiert.ItemsSource = BlockierteKombinationen;
             DataGridBlockiert.DisplayMemberPath = "Blockiert";
+            DataGridSitznachbarn.ItemsSource = Sitznachbarn;
+            DataGridSitznachbarn.DisplayMemberPath = "Sitznachbar";
             ComboboxSchueler.ItemsSource = Schueler;
             ComboboxSchueler.DisplayMemberPath = "Name";
             Iterationen.ItemsSource = I;
+            ComboBoxGewichtung.ItemsSource = J;
             Blockieren1.ItemsSource = Schueler;
             Blockieren1.DisplayMemberPath = "Name";
-            
-         //   DataGridErgebnis.ItemsSource
+            Sitznachbar1.ItemsSource = Schueler;
+            Sitznachbar1.DisplayMemberPath = "Name";
+            //   DataGridErgebnis.ItemsSource
 
 
         }
@@ -86,17 +93,42 @@ namespace Sitzplan
             }
             string Code1 = "Normal";
 
-            if(trueRandom.IsChecked == true)
+
+            if (trueRandom.IsChecked == true && BlockierungBeachten.IsChecked == false && SitznachbarnBeachten.IsChecked == false)
             {
                 Code1 = "trueRandom";
             }
-            else if(BlockiertRandom.IsChecked == true)
+            else if (trueRandom.IsChecked == true && BlockierungBeachten.IsChecked == true && SitznachbarnBeachten.IsChecked == false)
             {
                 Code1 = "BlockiertRandom";
             }
-            else if(Normal.IsChecked == true)
+            else if (Normal.IsChecked == true && BlockierungBeachten.IsChecked == true && SitznachbarnBeachten.IsChecked == false)
             {
                 Code1 = "Normal";
+            }
+            else if (Normal.IsChecked == true && BlockierungBeachten.IsChecked == true && SitznachbarnBeachten.IsChecked == true)
+            {
+                Code1 = "NormalSitznachbar";
+            }
+            else if (Normal.IsChecked == true && BlockierungBeachten.IsChecked == false && SitznachbarnBeachten.IsChecked == false)
+            {
+                Code1 = "NormalOhneBlockierungen";
+            }
+            else if (Normal.IsChecked == true && BlockierungBeachten.IsChecked == false && SitznachbarnBeachten.IsChecked == true)
+            {
+                Code1 = "NormalOhneBlockierungenMitSitznachbar";
+            }
+            else if (Normal.IsChecked == true && BlockierteKombinationen.Count == 0 && SitznachbarnBeachten.IsChecked == true)
+            {
+                Code1 = "NormalOhneBlockierungenMitSitznachbar";
+            }
+            else if (Normal.IsChecked == true && Sitznachbarn.Count == 0 && BlockierungBeachten.IsChecked == true)
+            {
+                Code1 = "Normal";
+            }
+            else if (Normal.IsChecked == true && BlockierteKombinationen.Count == 0 && Sitznachbarn.Count == 0)
+            {
+                Code1 = "NormalOhneBlockierungen";
             }
             switch (Code)
             {
@@ -119,7 +151,26 @@ namespace Sitzplan
                             sitzplan.BerechneSitzplan(Schueler);
                             ZeigeErgebnisAn();
                             break;
-
+                        case "NormalSitznachbar":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.Gewichtung = J[ComboBoxGewichtung.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanSitznachbar(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "NormalOhneBlockierungen":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanOhneBlockierungen(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "NormalOhneBlockierungenMitSitznachbar":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.Gewichtung = J[ComboBoxGewichtung.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanOhneBlockierungenMitSitznachbar(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
                     }
                     break;
                 case "ZweiDreiZwei":
@@ -139,6 +190,26 @@ namespace Sitzplan
                             sitzplan.Iterationen = I[Iterationen.SelectedIndex];
                             sitzplan.schueler = Schueler;
                             sitzplan.BerechneSitzplanZweiDreiZwei(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "NormalSitznachbar":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.Gewichtung = J[ComboBoxGewichtung.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanSitznachbarZweiDreiZwei(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "NormalOhneBlockierungen":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanOhneBlockierungenZweiDreiZwei(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "NormalOhneBlockierungenMitSitznachbar":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.Gewichtung = J[ComboBoxGewichtung.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanOhneBlockierungenMitSitznachbarZweiDreiZwei(Schueler);
                             ZeigeErgebnisAn();
                             break;
                     }
@@ -162,6 +233,26 @@ namespace Sitzplan
                             sitzplan.BerechneSitzplanZweiVierZwei(Schueler);
                             ZeigeErgebnisAn();
                             break;
+                        case "NormalSitznachbar":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.Gewichtung = J[ComboBoxGewichtung.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanSitznachbarZweiVierZwei(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "NormalOhneBlockierungen":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanOhneBlockierungenZweiVierZwei(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "NormalOhneBlockierungenMitSitznachbar":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.Gewichtung = J[ComboBoxGewichtung.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanOhneBlockierungenMitSitznachbarZweiVierZwei(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
                     }
                     break;
                 case "VierVier":
@@ -181,6 +272,26 @@ namespace Sitzplan
                             sitzplan.Iterationen = I[Iterationen.SelectedIndex];
                             sitzplan.schueler = Schueler;
                             sitzplan.BerechneSitzplanVierVier(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "NormalSitznachbar":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.Gewichtung = J[ComboBoxGewichtung.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanSitznachbarVierVier(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "NormalOhneBlockierungen":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanOhneBlockierungenVierVier(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "NormalOhneBlockierungenMitSitznachbar":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.Gewichtung = J[ComboBoxGewichtung.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanOhneBlockierungenMitSitznachbarVierVier(Schueler);
                             ZeigeErgebnisAn();
                             break;
                     }
@@ -203,6 +314,26 @@ namespace Sitzplan
                             sitzplan.Iterationen = I[Iterationen.SelectedIndex];
                             sitzplan.schueler = Schueler;
                             sitzplan.BerechneSitzplanFuenfFuenf(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "NormalSitznachbar":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.Gewichtung = J[ComboBoxGewichtung.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanSitznachbarFuenfFuenf(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "NormalOhneBlockierungen":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanOhneBlockierungenFuenfFuenf(Schueler);
+                            ZeigeErgebnisAn();
+                            break;
+                        case "NormalOhneBlockierungenMitSitznachbar":
+                            sitzplan.Iterationen = I[Iterationen.SelectedIndex];
+                            sitzplan.Gewichtung = J[ComboBoxGewichtung.SelectedIndex];
+                            sitzplan.schueler = Schueler;
+                            sitzplan.BerechneSitzplanOhneBlockierungenMitSitznachbarFuenfFuenf(Schueler);
                             ZeigeErgebnisAn();
                             break;
                     }
@@ -241,7 +372,7 @@ namespace Sitzplan
                 return;
             }
             AnzahlEingetrageneSchueler++;
-            TSitzplan.Schueler eingetragenerSchueler = new TSitzplan.Schueler(AnzahlEingetrageneSchueler, Name, null, null, null, null, null, new List<string>());
+            TSitzplan.Schueler eingetragenerSchueler = new TSitzplan.Schueler(AnzahlEingetrageneSchueler, Name, null, null, null, null, null, new List<string>(), new List<string>());
             Schueler.Add(eingetragenerSchueler);
             SchuelerEingeben.Clear();
             UpdateTabelle();
@@ -274,6 +405,12 @@ namespace Sitzplan
 
         private void BlockierenEingeben_Click(object sender, RoutedEventArgs e)
         {
+            if(Blockieren1.SelectedIndex == Blockieren2.SelectedIndex)
+            {
+                System.Windows.MessageBox.Show("Etwas ist schief gelaufen!");
+                //Blockieren1.Selected
+
+            }
             foreach(string s in Schueler[Blockieren1.SelectedIndex].Blockiert)
             {
                 if (Schueler[Blockieren2.SelectedIndex].Name.Equals(s))
@@ -289,8 +426,8 @@ namespace Sitzplan
             //BlockierteListe[Blockieren2.SelectedIndex].Add(Schueler[Blockieren1.SelectedIndex].Name);
             BlockierteKombinationen.Add(new TBlockierteKombination.BlockierteKombination(Schueler[Blockieren2.SelectedIndex].Name + " mit " + Schueler[Blockieren1.SelectedIndex].Name));
             DataGridBlockiert.Items.Refresh();
-            Blockieren1.SelectedIndex = ComboboxSchueler.SelectedIndex;
-            Blockieren2.SelectedIndex = ComboboxSchueler.SelectedIndex;
+            Blockieren1.SelectedIndex = -1;
+            Blockieren2.SelectedIndex = -1;
             Blockieren2.IsEnabled = false;
             BlockierenEingeben.IsEnabled = false;
         }
@@ -341,7 +478,7 @@ namespace Sitzplan
         {
 
             TSitzplan.Schueler item1, item2, item3, item4, item5, item6;
-            item1 = new TSitzplan.Schueler(Schueler[ComboboxSchueler.SelectedIndex].Nr, Schueler[ComboboxSchueler.SelectedIndex].Name, Schueler[ComboboxSchueler.SelectedIndex].Wunsch1, Schueler[ComboboxSchueler.SelectedIndex].Wunsch2, Schueler[ComboboxSchueler.SelectedIndex].Wunsch3, Schueler[ComboboxSchueler.SelectedIndex].Wunsch4, Schueler[ComboboxSchueler.SelectedIndex].Wunsch5, Schueler[ComboboxSchueler.SelectedIndex].Blockiert);
+            item1 = new TSitzplan.Schueler(Schueler[ComboboxSchueler.SelectedIndex].Nr, Schueler[ComboboxSchueler.SelectedIndex].Name, Schueler[ComboboxSchueler.SelectedIndex].Wunsch1, Schueler[ComboboxSchueler.SelectedIndex].Wunsch2, Schueler[ComboboxSchueler.SelectedIndex].Wunsch3, Schueler[ComboboxSchueler.SelectedIndex].Wunsch4, Schueler[ComboboxSchueler.SelectedIndex].Wunsch5, Schueler[ComboboxSchueler.SelectedIndex].Blockiert, Schueler[ComboboxSchueler.SelectedIndex].Sitznachbar);
             item2 = item1;
             item3 = item1;
             item4 = item1;
@@ -414,7 +551,7 @@ namespace Sitzplan
                 TSitzplan.Schueler s = Schueler[i];
                 if (s.Equals(item1))
                 {
-                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null);
+                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null, null);
                     
                 }
             }
@@ -423,7 +560,7 @@ namespace Sitzplan
                 TSitzplan.Schueler s = Schueler[i];
                 if (s.Equals(item2))
                 {
-                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null);
+                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null, null);
                     ComboboxWunsch1.SelectedIndex = i;
                 }
             }
@@ -432,7 +569,7 @@ namespace Sitzplan
                 TSitzplan.Schueler s = Schueler[i];
                 if (s.Equals(item3))
                 {
-                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null);
+                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null, null);
                 }
             }
             for (int i = 0; i < Schueler.Count; i++)
@@ -440,7 +577,7 @@ namespace Sitzplan
                 TSitzplan.Schueler s = Schueler[i];
                 if (s.Equals(item4))
                 {
-                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null);
+                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null, null);
                 }
             }
             for (int i = 0; i < Schueler.Count; i++)
@@ -448,7 +585,7 @@ namespace Sitzplan
                 TSitzplan.Schueler s = Schueler[i];
                 if (s.Equals(item5))
                 {
-                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null);
+                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null, null);
                 }
             }
             for (int i = 0; i < Schueler.Count; i++)
@@ -456,7 +593,7 @@ namespace Sitzplan
                 TSitzplan.Schueler s = Schueler[i];
                 if (s.Equals(item6))
                 {
-                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null);
+                    W[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null, null);
                 }
             }
             
@@ -750,7 +887,29 @@ namespace Sitzplan
                         }
                         
                     }
+                    
                     DataGridBlockiert.Items.Refresh();
+                    
+                }
+                if (schueler.Sitznachbar.Count != 0)
+                {
+                    foreach (string Nachbar in schueler.Sitznachbar)
+                    {
+                        bool skip = false;
+                        foreach (TSitznachbar.Sitznachbarn blockierteKombination in Sitznachbarn)
+                        {
+                            if ((blockierteKombination.Sitznachbar).Equals(Nachbar + " mit " + schueler.Name))
+                            {
+                                skip = true;
+                            }
+                        }
+                        if (!skip)
+                        {
+                            Sitznachbarn.Add(new TSitznachbar.Sitznachbarn(schueler.Name + " mit " + Nachbar));
+                        }
+
+                    }
+                    DataGridSitznachbarn.Items.Refresh();
                 }
             }
             AnzahlEingetrageneSchueler = Schueler.Count();
@@ -801,6 +960,27 @@ namespace Sitzplan
                     }
                     window.DataGridBlockiert.Items.Refresh();
                 }
+                if (schueler.Sitznachbar.Count != 0)
+                {
+                    foreach (string Nachbar in schueler.Sitznachbar)
+                    {
+                        bool skip = false;
+                        foreach (TSitznachbar.Sitznachbarn blockierteKombination in window.Sitznachbarn)
+                        {
+                            if ((blockierteKombination.Sitznachbar).Equals(Nachbar + " mit " + schueler.Name))
+                            {
+                                skip = true;
+                            }
+                        }
+                        if (!skip)
+                        {
+                            window.Sitznachbarn.Add(new TSitznachbar.Sitznachbarn(schueler.Name + " mit " + Nachbar));
+                        }
+
+                    }
+                    window.DataGridBlockiert.Items.Refresh();
+                    window.DataGridSitznachbarn.Items.Refresh();
+                }
             }
             window.AnzahlEingetrageneSchueler = window.Schueler.Count();
         }
@@ -821,7 +1001,7 @@ namespace Sitzplan
             TSitzplan.Schueler item1, item2;
             if (Blockieren1.SelectedIndex != -1)
             {
-                item1 = new TSitzplan.Schueler(Schueler[Blockieren1.SelectedIndex].Nr, Schueler[Blockieren1.SelectedIndex].Name, Schueler[Blockieren1.SelectedIndex].Wunsch1, Schueler[Blockieren1.SelectedIndex].Wunsch2, Schueler[Blockieren1.SelectedIndex].Wunsch3, Schueler[Blockieren1.SelectedIndex].Wunsch4, Schueler[Blockieren1.SelectedIndex].Wunsch5, Schueler[Blockieren1.SelectedIndex].Blockiert);
+                item1 = new TSitzplan.Schueler(Schueler[Blockieren1.SelectedIndex].Nr, Schueler[Blockieren1.SelectedIndex].Name, Schueler[Blockieren1.SelectedIndex].Wunsch1, Schueler[Blockieren1.SelectedIndex].Wunsch2, Schueler[Blockieren1.SelectedIndex].Wunsch3, Schueler[Blockieren1.SelectedIndex].Wunsch4, Schueler[Blockieren1.SelectedIndex].Wunsch5, Schueler[Blockieren1.SelectedIndex].Blockiert, Schueler[Blockieren1.SelectedIndex].Sitznachbar);
 
                 item2 = item1;
                 if (ComboboxWunsch1.SelectedIndex != -1)
@@ -847,7 +1027,7 @@ namespace Sitzplan
                     TSitzplan.Schueler s = Schueler[i];
                     if (s.Equals(item1))
                     {
-                        Liste[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null);
+                        Liste[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null, null);
 
                     }
                 }
@@ -904,16 +1084,19 @@ namespace Sitzplan
         private void trueRandom_Click(object sender, RoutedEventArgs e)
         {
             Iterationen.IsEnabled = false;
+            DisableSitznachbar();
+            SitznachbarnBeachten.IsChecked = false;
+            SitznachbarnBeachten.IsEnabled = false;
         }
 
-        private void BlockiertRandom_Click(object sender, RoutedEventArgs e)
-        {
-            Iterationen.IsEnabled = false;
-        }
+        
 
         private void Normal_Click(object sender, RoutedEventArgs e)
         {
             Iterationen.IsEnabled = true;
+            EnableSitznachbar();
+            SitznachbarnBeachten.IsChecked = true;
+            SitznachbarnBeachten.IsEnabled = true;
         }
 
         private void Blockieren2_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1017,6 +1200,131 @@ namespace Sitzplan
             DataGridBlockiert.Items.Refresh();
 
             
+        }
+
+        private void Sitznachbar1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Sitznachbar2.IsEnabled = true;
+            TSitzplan.Schueler item1, item2;
+            if (Sitznachbar1.SelectedIndex != -1)
+            {
+                item1 = new TSitzplan.Schueler(Schueler[Sitznachbar1.SelectedIndex].Nr, Schueler[Sitznachbar1.SelectedIndex].Name, Schueler[Sitznachbar1.SelectedIndex].Wunsch1, Schueler[Sitznachbar1.SelectedIndex].Wunsch2, Schueler[Sitznachbar1.SelectedIndex].Wunsch3, Schueler[Sitznachbar1.SelectedIndex].Wunsch4, Schueler[Sitznachbar1.SelectedIndex].Wunsch5, Schueler[Sitznachbar1.SelectedIndex].Blockiert, Schueler[Sitznachbar1.SelectedIndex].Sitznachbar);
+
+                item2 = item1;
+                if (ComboboxWunsch1.SelectedIndex != -1)
+                {
+
+                    for (int i = 0; i < Schueler.Count; i++)
+                    {
+                        if (Schueler[i].Name == Schueler[ComboboxWunsch1.SelectedIndex].Name)
+                        {
+                            item2 = Schueler[i];
+                        }
+                    }
+                }
+
+                List<TSitzplan.Schueler> Liste = new List<TSitzplan.Schueler>();
+                foreach (TSitzplan.Schueler schueler in Schueler)
+                {
+                    Liste.Add(schueler);
+
+                }
+                for (int i = 0; i < Schueler.Count; i++)
+                {
+                    TSitzplan.Schueler s = Schueler[i];
+                    if (s.Equals(item1))
+                    {
+                        Liste[i] = new TSitzplan.Schueler(0, null, null, null, null, null, null, null, null);
+
+                    }
+                }
+
+                Sitznachbar2.ItemsSource = Liste;
+                Sitznachbar2.DisplayMemberPath = "Name";
+            }
+        }
+
+        private void Sitznachbar2_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SitznachbarnEingeben.IsEnabled = true;
+        }
+
+        private void SitznachbarnEingeben_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (string s in Schueler[Sitznachbar1.SelectedIndex].Sitznachbar)
+            {
+                if (Schueler[Sitznachbar2.SelectedIndex].Name.Equals(s))
+                {
+                    System.Windows.MessageBox.Show("Diese Kombination wurde schon bestimmt!");
+                    return;
+                }
+            }
+            Schueler[Sitznachbar1.SelectedIndex].Sitznachbar.Add(Schueler[Sitznachbar2.SelectedIndex].Name);
+            Schueler[Sitznachbar2.SelectedIndex].Sitznachbar.Add(Schueler[Sitznachbar1.SelectedIndex].Name);
+
+            //BlockierteListe[Sitznachbar1.SelectedIndex].Add(Schueler[Sitznachbar2.SelectedIndex].Name);
+            //BlockierteListe[Sitznachbar2.SelectedIndex].Add(Schueler[Sitznachbar1.SelectedIndex].Name);
+            Sitznachbarn.Add(new TSitznachbar.Sitznachbarn(Schueler[Sitznachbar2.SelectedIndex].Name + " mit " + Schueler[Sitznachbar1.SelectedIndex].Name));
+            DataGridSitznachbarn.Items.Refresh();
+            Sitznachbar1.SelectedIndex = -1;
+            Sitznachbar2.SelectedIndex = -1;
+            Sitznachbar2.IsEnabled = false;
+            SitznachbarnEingeben.IsEnabled = false;
+        }
+
+        private void AlleSitznachbarnLoeschen_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BlockierungBeachten_Click(object sender, RoutedEventArgs e)
+        {
+            if (BlockierungBeachten.IsChecked == true)
+            {
+                EnableBlockierung();
+            }
+            else
+            {
+                DisableBlockierung();
+            }
+        }
+
+        private void SitznachbarnBeachten_Click(object sender, RoutedEventArgs e)
+        {
+            if (SitznachbarnBeachten.IsChecked == true)
+            {
+                EnableSitznachbar();
+            }
+            else
+            {
+                DisableSitznachbar();
+            }
+        }
+        private void DisableSitznachbar()
+        {
+            Sitznachbar1.IsEnabled = false;
+            AlleSitznachbarnLoeschen.IsEnabled = false;
+            DataGridSitznachbarn.IsEnabled = false;
+            ComboBoxGewichtung.IsEnabled = false;
+        }
+        private void DisableBlockierung()
+        {
+            Blockieren1.IsEnabled = false;
+            AlleBlockierungenLoeschen.IsEnabled = false;
+            DataGridBlockiert.IsEnabled = false;
+        }
+        private void EnableSitznachbar()
+        {
+            Sitznachbar1.IsEnabled = true;
+            AlleSitznachbarnLoeschen.IsEnabled = true;
+            DataGridSitznachbarn.IsEnabled = true;
+            ComboBoxGewichtung.IsEnabled = true;
+        }
+        private void EnableBlockierung()
+        {
+            Blockieren1.IsEnabled = true;
+            AlleBlockierungenLoeschen.IsEnabled = true;
+            DataGridBlockiert.IsEnabled = true;
         }
     }
 }
