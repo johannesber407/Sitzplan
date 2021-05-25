@@ -1326,5 +1326,10 @@ namespace Sitzplan
             AlleBlockierungenLoeschen.IsEnabled = true;
             DataGridBlockiert.IsEnabled = true;
         }
+
+        private void ButtonBerechnen_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

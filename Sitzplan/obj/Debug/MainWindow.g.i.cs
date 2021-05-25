@@ -598,7 +598,7 @@ namespace Sitzplan {
             this.ButtonBerechnen = ((System.Windows.Controls.Button)(target));
             
             #line 177 "..\..\MainWindow.xaml"
-            this.ButtonBerechnen.Click += new System.Windows.RoutedEventHandler(this.ButtonBerechnen_Click);
+            this.ButtonBerechnen.Click += new System.Windows.RoutedEventHandler(this.ButtonBerechnen_Click_1);
             
             #line default
             #line hidden

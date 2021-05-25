@@ -174,7 +174,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 
-                            <Button Name="ButtonBerechnen" Content="_Berechnen" Click="ButtonBerechnen_Click" Margin="10"/>
+                            <Button Name="ButtonBerechnen" Content="_Berechnen" Click="ButtonBerechnen_Click"  Margin="10"/>
                             <Button Name="ButtonBeenden" Content="B_eenden" Click="ButtonBeenden_Click" Margin="10"/>
                             <Label VerticalAlignment="Center">Iterationen:</Label>
                             <ComboBox Name="Iterationen"  Width="180" Margin="10" ItemsSource="{Binding I}" SelectedIndex="4"/>

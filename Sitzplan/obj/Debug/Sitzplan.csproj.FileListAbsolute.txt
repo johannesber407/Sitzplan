@@ -13,3 +13,5 @@ C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Sitzplan.csproj.
 C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Sitzplan.csproj.CoreCompileInputs.cache
 C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Sitzplan.exe
 C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Sitzplan.pdb
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Window1.g.cs
+C:\Users\jb\CloudStation\Informatik\Sitzplan\Sitzplan\obj\Debug\Window1.baml
